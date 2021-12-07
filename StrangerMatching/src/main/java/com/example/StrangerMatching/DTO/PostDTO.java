@@ -2,9 +2,12 @@ package com.example.StrangerMatching.DTO;
 
 import com.example.StrangerMatching.Entity.PostCommentEntity;
 import com.example.StrangerMatching.Entity.PostImageEntity;
+import com.example.StrangerMatching.Entity.PostReactionEntity;
 import com.example.StrangerMatching.Entity.UserEntity;
 import com.example.StrangerMatching.Parser.PostCommentParser;
 import com.example.StrangerMatching.Parser.PostImageParse;
+import com.example.StrangerMatching.Parser.PostReactionParser;
+import com.example.StrangerMatching.Parser.UserParser;
 
 import java.util.Date;
 import java.util.List;
@@ -12,10 +15,27 @@ import java.util.List;
 public class PostDTO {
     private Long id;
     private String caption;
-    private int totalLike;
     private Date createdDate;
-    private UserEntity user;
+    private UserDTO user;
     private List<PostImageDTO> images;
+    private List<PostReactionDTO> reactions;
+    private int totalReaction;
+
+    public int getTotalReaction() {
+        return totalReaction;
+    }
+
+    public void setTotalReaction(int totalReaction) {
+        this.totalReaction = totalReaction;
+    }
+
+    public List<PostReactionDTO> getReactions() {
+        return reactions;
+    }
+
+    public void setReactions(List<PostReactionDTO> reactions) {
+        this.reactions = reactions;
+    }
 
     public Long getId() {
         return id;
@@ -33,14 +53,6 @@ public class PostDTO {
         this.caption = caption;
     }
 
-    public int getTotalLike() {
-        return totalLike;
-    }
-
-    public void setTotalLike(int totalLike) {
-        this.totalLike = totalLike;
-    }
-
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -49,11 +61,11 @@ public class PostDTO {
         this.createdDate = createdDate;
     }
 
-    public UserEntity getUser() {
+    public UserDTO getUser() {
         return user;
     }
 
-    public void setUser(UserEntity user) {
+    public void setUser(UserDTO user) {
         this.user = user;
     }
 
@@ -65,13 +77,14 @@ public class PostDTO {
         this.images = images;
     }
 
-    public PostDTO(Long id, String caption, int totalLike, Date createdDate, UserEntity user, List<PostImageEntity> images) {
+    public PostDTO(Long id, String caption, Date createdDate, UserEntity user, List<PostImageEntity> images, List<PostReactionEntity> reactions) {
         this.id = id;
         this.caption = caption;
-        this.totalLike = totalLike;
         this.createdDate = createdDate;
-        this.user = user;
+        this.user = UserParser.ToDTO(user);
         this.images = PostImageParse.ToListDTO(images);
+        this.reactions = PostReactionParser.ToListDTO(reactions);
+        this.totalReaction = this.reactions.size();
     }
 
     public PostDTO() {

@@ -4,32 +4,31 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.Date;
 
-@Entity(name = "post_comment")
-public class PostCommentEntity {
+@Entity(name = "post_reaction")
+public class PostReactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "text",columnDefinition = "text")
-    private String text;
-
-    @Column(name = "created_date")
-    private Date createdDate;
-
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    @JoinColumn(name = "post_id",referencedColumnName = "id")
     private PostEntity post;
 
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "user_id", referencedColumnName = "email")
+    @JoinColumn(name = "user_id",referencedColumnName = "email")
     private UserEntity user;
+
+    @ManyToOne
+    @JsonBackReference
+    @JsonIgnore
+    @JoinColumn(name = "reaction_id",referencedColumnName = "id")
+    private ReactionEntity reaction;
 
     public Long getId() {
         return id;
@@ -37,22 +36,6 @@ public class PostCommentEntity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
     }
 
     public PostEntity getPost() {
@@ -71,6 +54,11 @@ public class PostCommentEntity {
         this.user = user;
     }
 
-    public PostCommentEntity() {
+    public ReactionEntity getReaction() {
+        return reaction;
+    }
+
+    public void setReaction(ReactionEntity reaction) {
+        this.reaction = reaction;
     }
 }

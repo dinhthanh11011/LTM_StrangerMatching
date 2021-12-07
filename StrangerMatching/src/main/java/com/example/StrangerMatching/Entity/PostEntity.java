@@ -18,9 +18,6 @@ public class PostEntity {
     @Column(name = "caption",columnDefinition = "text")
     private String caption;
 
-    @Column(name = "total_like")
-    private int totalLike;
-
     @Column(name = "created_date")
     private Date createdDate;
 
@@ -40,6 +37,19 @@ public class PostEntity {
     @JsonIgnore
     private List<PostCommentEntity> comments;
 
+    @OneToMany(mappedBy = "post")
+    @JsonManagedReference
+    @JsonIgnore
+    private List<PostReactionEntity> reactions;
+
+    public List<PostReactionEntity> getReactions() {
+        return reactions;
+    }
+
+    public void setReactions(List<PostReactionEntity> reactions) {
+        this.reactions = reactions;
+    }
+
     public Long getId() {
         return id;
     }
@@ -54,14 +64,6 @@ public class PostEntity {
 
     public void setCaption(String caption) {
         this.caption = caption;
-    }
-
-    public int getTotalLike() {
-        return totalLike;
-    }
-
-    public void setTotalLike(int totalLike) {
-        this.totalLike = totalLike;
     }
 
     public Date getCreatedDate() {

@@ -47,4 +47,9 @@ public class PostImageEntity {
 
     public PostImageEntity() {
     }
+
+    public PostImageEntity(String name, PostEntity post) {
+        this.name = name;
+        this.post = post;
+    }
 }
