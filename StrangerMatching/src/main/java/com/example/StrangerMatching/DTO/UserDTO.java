@@ -1,14 +1,13 @@
 package com.example.StrangerMatching.DTO;
 
 import com.example.StrangerMatching.Common.FunctionSupport;
-import com.example.StrangerMatching.Entity.GenderEntity;
 import com.example.StrangerMatching.Entity.UserEntity;
 
 public class UserDTO {
     private String email;
     private String name;
     private String story;
-    private String avatar;
+    private AvatarDTO avatar;
     private int age;
     private int agePreferenceForm;
     private int agePreferenceTo;
@@ -39,11 +38,11 @@ public class UserDTO {
         this.story = story;
     }
 
-    public String getAvatar() {
+    public AvatarDTO getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public void setAvatar(AvatarDTO avatar) {
         this.avatar = avatar;
     }
 

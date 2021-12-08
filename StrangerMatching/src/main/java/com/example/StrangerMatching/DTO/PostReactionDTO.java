@@ -5,7 +5,6 @@ import com.example.StrangerMatching.Entity.UserEntity;
 
 public class PostReactionDTO {
     private Long id;
-    private UserEntity user;
     private ReactionEntity reaction;
 
     public Long getId() {
@@ -15,15 +14,6 @@ public class PostReactionDTO {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
     public ReactionEntity getReaction() {
         return reaction;
     }
@@ -32,9 +22,8 @@ public class PostReactionDTO {
         this.reaction = reaction;
     }
 
-    public PostReactionDTO(Long id, UserEntity user, ReactionEntity reaction) {
+    public PostReactionDTO(Long id,  ReactionEntity reaction) {
         this.id = id;
-        this.user = user;
         this.reaction = reaction;
     }
 

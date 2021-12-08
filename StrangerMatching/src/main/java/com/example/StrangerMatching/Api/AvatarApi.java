@@ -32,7 +32,7 @@ public class AvatarApi {
 
     @DeleteMapping("/{avatarId}")
     public ResponseEntity deleteOne(@PathVariable(name = "avatarId") Long avatarId) {
-        if (!avatarService.deleteOneByName(avatarId))
+        if (!avatarService.deleteOneById(avatarId))
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
         return ResponseEntity.status(200).body(BaseResponsibilityMessage.DeletingSuccessfully);
     }

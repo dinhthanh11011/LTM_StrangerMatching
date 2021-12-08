@@ -15,19 +15,19 @@ public class PostReactionEntity {
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "post_id",referencedColumnName = "id")
+    @JoinColumn(name = "post_id",referencedColumnName = "id", nullable = false)
     private PostEntity post;
 
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "user_id",referencedColumnName = "email")
+    @JoinColumn(name = "user_id",referencedColumnName = "email", nullable = false)
     private UserEntity user;
 
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "reaction_id",referencedColumnName = "id")
+    @JoinColumn(name = "reaction_id",referencedColumnName = "id", nullable = false)
     private ReactionEntity reaction;
 
     public Long getId() {

@@ -18,7 +18,7 @@ public class MessageImageEntity {
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "message_id", referencedColumnName = "id")
+    @JoinColumn(name = "message_id", referencedColumnName = "id",nullable = false)
     private MessageEntity message;
 
     public Long getId() {

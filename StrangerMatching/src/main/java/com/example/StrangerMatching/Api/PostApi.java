@@ -1,9 +1,13 @@
 package com.example.StrangerMatching.Api;
 
 import com.example.StrangerMatching.Common.BaseResponsibilityMessage;
+import com.example.StrangerMatching.DTO.PostCommentDTO;
 import com.example.StrangerMatching.DTO.PostDTO;
+import com.example.StrangerMatching.DTO.PostWithFilesDTO;
+import com.example.StrangerMatching.Entity.PostCommentEntity;
 import com.example.StrangerMatching.Entity.PostEntity;
 import com.example.StrangerMatching.Entity.PostReactionEntity;
+import com.example.StrangerMatching.Parser.PostCommentParser;
 import com.example.StrangerMatching.Parser.PostParser;
 import com.example.StrangerMatching.Repository.IPostReactionRepository;
 import com.example.StrangerMatching.Service.PostService;
@@ -26,23 +30,15 @@ public class PostApi {
         return PostParser.ToListDTO(postService.getAll());
     }
 
-    @PostMapping()
-    public ResponseEntity postOne(@RequestBody PostEntity post, @PathVariable("files") MultipartFile[] files) {
-        if (postService.createOne(post, files) == null)
+    @PostMapping(value = "",produces = "application/json")
+    public ResponseEntity postOne(@ModelAttribute PostWithFilesDTO post) {
+        PostEntity nPost = new PostEntity();
+        nPost.setCaption(post.getCaption());
+        nPost.setUser(post.getUser());
+        if (postService.createOne(nPost, post.getFiles()) == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponsibilityMessage.CreatingSuccessfully);
-    }
-
-    @PutMapping("/Reaction/{postId}")
-    public ResponseEntity reactionPost(@PathVariable("postId") Long postId,@RequestBody PostReactionEntity postReaction){
-        postReaction.setPost(new PostEntity());
-        postReaction.getPost().setId(postId);
-
-        if(postService.reactionPost(postReaction)==null)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
-
-        return ResponseEntity.status(200).body(BaseResponsibilityMessage.UpdatingSuccessfully);
     }
 
     @DeleteMapping("/{postId}")
@@ -50,6 +46,34 @@ public class PostApi {
         if (postService.deleteOne(postId) == false)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponsibilityMessage.DeletingSuccessfully);
+        return ResponseEntity.status(200).body(BaseResponsibilityMessage.DeletingSuccessfully);
     }
+
+
+    // React post
+    //=================================================================================
+    @PostMapping("/Reaction")
+    public ResponseEntity reactionPost(@RequestBody PostReactionEntity postReaction){
+        if(postService.reactionPost(postReaction)==null)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
+
+        return ResponseEntity.status(200).body(BaseResponsibilityMessage.UpdatingSuccessfully);
+    }
+
+    // comment post
+    //=================================================================================
+    @PostMapping("/Comment")
+    public ResponseEntity commentPost(@RequestBody PostCommentEntity comment){
+        if(postService.commentPost(comment)==null)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
+
+        return ResponseEntity.status(200).body(BaseResponsibilityMessage.UpdatingSuccessfully);
+    }
+
+    @GetMapping("/Comment/{postId}")
+    public List<PostCommentDTO> getAllCommentPost(@PathVariable("postId") Long postId){
+        return PostCommentParser.ToListDTO(postService.getAllPostComment(postId));
+    }
+
+
 }

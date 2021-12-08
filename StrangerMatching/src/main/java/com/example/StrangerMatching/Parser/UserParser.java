@@ -14,7 +14,7 @@ public class UserParser {
         dto.setName(user.getName());
 
         dto.setStory(user.getStory());
-        dto.setAvatar(user.getAvatar());
+        dto.setAvatar(AvatarParser.ToDTO(user.getAvatar()));
 
         dto.setAge(user.getAge());
         dto.setAgePreferenceForm(user.getAgePreferenceFrom());

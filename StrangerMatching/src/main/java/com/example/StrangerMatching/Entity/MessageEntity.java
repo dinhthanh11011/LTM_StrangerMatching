@@ -18,19 +18,19 @@ public class MessageEntity {
     @Column(name = "text",columnDefinition = "text")
     private String text;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date",nullable = false)
     private Date createdDate;
 
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "send_from", referencedColumnName = "Email")
+    @JoinColumn(name = "send_from", referencedColumnName = "Email",nullable = false)
     private UserEntity sendFrom;
 
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "send_to", referencedColumnName = "Email")
+    @JoinColumn(name = "send_to", referencedColumnName = "Email",nullable = false)
     private UserEntity sendTo;
 
     @OneToMany(mappedBy = "message")

@@ -2,6 +2,8 @@ package com.example.StrangerMatching.Service;
 
 import com.example.StrangerMatching.Common.FunctionSupport;
 import com.example.StrangerMatching.Entity.UserEntity;
+import com.example.StrangerMatching.Repository.IAvatarRepository;
+import com.example.StrangerMatching.Repository.IGenderRepository;
 import com.example.StrangerMatching.Repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,16 +15,24 @@ public class UserService {
     @Autowired
     private IUserRepository iUserRepository;
 
+    @Autowired
+    private IAvatarRepository iAvatarRepository;
+
+    @Autowired
+    private IGenderRepository iGenderRepository;
+
     public List<UserEntity> getAll() {
         return iUserRepository.findAll();
     }
 
-    public UserEntity getOneByEmail(String email){
+    public UserEntity getOneByEmail(String email) {
         return iUserRepository.findByEmail(email);
     }
 
     public UserEntity createOne(UserEntity user) {
         try {
+            if (iUserRepository.existsByEmail(user.getEmail()) || !validUserInfo(user))
+                return null;
             user.setPassword(FunctionSupport.getMD5(user.getPassword()));
             user.setAgePreferenceFrom(17);
             user.setAgePreferenceTo(35);
@@ -54,9 +64,6 @@ public class UserService {
             if (!newUserInfo.getStory().isEmpty())
                 user.setStory(newUserInfo.getStory());
 
-            if (!newUserInfo.getAvatar().isEmpty())
-                user.setAvatar(newUserInfo.getAvatar());
-
             if (newUserInfo.getAge() > 0)
                 user.setAge(newUserInfo.getAge());
 
@@ -66,16 +73,30 @@ public class UserService {
             if (newUserInfo.getAgePreferenceTo() > 0)
                 user.setAgePreferenceTo(newUserInfo.getAgePreferenceTo());
 
+            if (newUserInfo.getAvatar() != null)
+                user.setAvatar(newUserInfo.getAvatar());
+
             if (newUserInfo.getGender() != null)
                 user.setGender(newUserInfo.getGender());
 
             if (newUserInfo.getGenderPreference() != null)
                 user.setGenderPreference(newUserInfo.getGenderPreference());
 
+            if (!validUserInfo(user))
+                return null;
+
             return iUserRepository.save(user);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private boolean validUserInfo(UserEntity user) {
+        if (!iAvatarRepository.existsById(user.getAvatar().getId()))
+            return false;
+        if (!iGenderRepository.existsById(user.getGender().getId()))
+            return false;
+        return true;
     }
 }

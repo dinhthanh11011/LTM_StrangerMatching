@@ -18,26 +18,26 @@ public class PostEntity {
     @Column(name = "caption",columnDefinition = "text")
     private String caption;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date",nullable = false)
     private Date createdDate;
 
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "user_id", referencedColumnName = "email")
+    @JoinColumn(name = "user_id", referencedColumnName = "email",nullable = false)
     private UserEntity user;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     @JsonIgnore
     private List<PostImageEntity> images;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     @JsonIgnore
     private List<PostCommentEntity> comments;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     @JsonIgnore
     private List<PostReactionEntity> reactions;

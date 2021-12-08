@@ -13,22 +13,22 @@ public class PostCommentEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "text",columnDefinition = "text")
+    @Column(name = "text",columnDefinition = "text",nullable = false)
     private String text;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date",nullable = false)
     private Date createdDate;
 
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    @JoinColumn(name = "post_id", referencedColumnName = "id",nullable = false)
     private PostEntity post;
 
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "user_id", referencedColumnName = "email")
+    @JoinColumn(name = "user_id", referencedColumnName = "email",nullable = false)
     private UserEntity user;
 
     public Long getId() {

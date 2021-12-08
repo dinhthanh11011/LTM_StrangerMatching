@@ -18,7 +18,7 @@ public class PostImageEntity {
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    @JoinColumn(name = "post_id", referencedColumnName = "id",nullable = false)
     private PostEntity post;
 
     public Long getId() {

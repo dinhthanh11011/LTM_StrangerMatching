@@ -1,8 +1,11 @@
 package com.example.StrangerMatching.DTO;
 
+import com.example.StrangerMatching.Common.FileUploadSupport;
+
 public class PostImageDTO {
     private Long id;
     private String name;
+    private String path;
 
     public Long getId() {
         return id;
@@ -23,6 +26,11 @@ public class PostImageDTO {
     public PostImageDTO(Long id, String name) {
         this.id = id;
         this.name = name;
+        this.path = FileUploadSupport.UPLOAD_FOLDER_NAME+this.name;
+    }
+
+    public String getPath() {
+        return FileUploadSupport.UPLOAD_FOLDER_NAME+this.name;
     }
 
     public PostImageDTO() {

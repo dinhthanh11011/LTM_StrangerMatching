@@ -20,8 +20,7 @@ public class UserEntity {
     @Column(name = "story",columnDefinition = "text")
     private String story;
 
-    @Column(name = "avatar",nullable = false)
-    private String Avatar;
+
 
     @Column(name = "age",nullable = false)
     private int age;
@@ -35,13 +34,19 @@ public class UserEntity {
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "gender_id", referencedColumnName = "id")
+    @JoinColumn(name = "avatar_id", referencedColumnName = "id",nullable = false)
+    private AvatarEntity avatar;
+
+    @ManyToOne
+    @JsonBackReference
+    @JsonIgnore
+    @JoinColumn(name = "gender_id", referencedColumnName = "id",nullable = false)
     private GenderEntity gender;
 
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "gender_preference_id", referencedColumnName = "id")
+    @JoinColumn(name = "gender_preference_id", referencedColumnName = "id",nullable = false)
     private GenderEntity genderPreference;
 
 
@@ -82,12 +87,12 @@ public class UserEntity {
         this.story = story;
     }
 
-    public String getAvatar() {
-        return Avatar;
+    public AvatarEntity getAvatar() {
+        return avatar;
     }
 
-    public void setAvatar(String avatar) {
-        Avatar = avatar;
+    public void setAvatar(AvatarEntity avatar) {
+        this.avatar = avatar;
     }
 
     public int getAge() {

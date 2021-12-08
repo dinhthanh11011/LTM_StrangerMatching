@@ -1,13 +1,8 @@
 package com.example.StrangerMatching.Service;
 
 import com.example.StrangerMatching.Common.FileUploadSupport;
-import com.example.StrangerMatching.Entity.PostEntity;
-import com.example.StrangerMatching.Entity.PostImageEntity;
-import com.example.StrangerMatching.Entity.PostReactionEntity;
-import com.example.StrangerMatching.Repository.IPostCommentRepository;
-import com.example.StrangerMatching.Repository.IPostImageRepository;
-import com.example.StrangerMatching.Repository.IPostReactionRepository;
-import com.example.StrangerMatching.Repository.IPostRepository;
+import com.example.StrangerMatching.Entity.*;
+import com.example.StrangerMatching.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +24,9 @@ public class PostService {
 
     @Autowired
     private IPostCommentRepository iPostCommentRepository;
+
+    @Autowired
+    private IReactionRepository iReactionRepository;
 
     public List<PostEntity> getAll() {
         return iPostRepository.findAllByOrderByCreatedDateDesc();
@@ -57,11 +55,34 @@ public class PostService {
         }
     }
 
+
+    public boolean deleteOne(Long postId) {
+        try {
+            for (PostImageEntity postImage : iPostImageRepository.findAllByPost_Id(postId)) {
+                FileUploadSupport.deleteOneByName(postImage.getName());
+            }
+            iPostRepository.deleteById(postId);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // React post
+    //=================================================================================
     public PostReactionEntity reactionPost(PostReactionEntity postReaction) {
         try {
-            PostReactionEntity pre = iPostReactionRepository.findByIdAndUser_Email(postReaction.getId(), postReaction.getUser().getEmail());
-            if (pre != null){
-                iPostRepository.deleteById(pre.getId());
+            if (!iReactionRepository.existsById(postReaction.getReaction().getId()) || !iPostRepository.existsById(postReaction.getPost().getId()))
+                return null;
+
+            PostReactionEntity pre = iPostReactionRepository.findByPost_IdAndUser_Email(postReaction.getPost().getId(), postReaction.getUser().getEmail());
+            if (pre != null) {
+                if (pre.getReaction().getId() != postReaction.getReaction().getId()) {
+                    pre.setReaction(postReaction.getReaction());
+                    return iPostReactionRepository.save(pre);
+                }
+                iPostReactionRepository.deleteById(pre.getReaction().getId());
                 return postReaction;
             }
 
@@ -72,18 +93,21 @@ public class PostService {
         }
     }
 
-    public boolean deleteOne(Long postId) {
+    // comment post
+    //=================================================================================
+    public PostCommentEntity commentPost(PostCommentEntity comment) {
         try {
-            for (PostImageEntity postImage : iPostImageRepository.deleteAllByPost_Id(postId)) {
-                FileUploadSupport.deleteOneByName(postImage.getName());
-            }
-            iPostReactionRepository.deleteAllByPost_Id(postId);
-            iPostCommentRepository.deleteAllByPost_Id(postId);
-            iPostRepository.deleteById(postId);
-            return true;
+            if (!iPostRepository.existsById(comment.getPost().getId()))
+                return null;
+            comment.setCreatedDate(new Date());
+            return iPostCommentRepository.save(comment);
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
+    }
+
+    public List<PostCommentEntity> getAllPostComment(Long postId) {
+        return iPostCommentRepository.findAllByPost_Id(postId);
     }
 }

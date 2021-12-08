@@ -16,6 +16,7 @@ public class AvatarDTO {
         this.path = FileUploadSupport.UPLOAD_FOLDER_NAME+this.name;
     }
 
+
     public Long getId() {
         return id;
     }
@@ -33,7 +34,7 @@ public class AvatarDTO {
     }
 
     public String getPath() {
-        return path;
+        return FileUploadSupport.UPLOAD_FOLDER_NAME+this.name;
     }
 
     public void setPath(String path) {

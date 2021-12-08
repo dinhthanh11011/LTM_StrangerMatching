@@ -30,7 +30,7 @@ public class AvatarService {
     }
 
 
-    public boolean deleteOneByName(Long avatarid) {
+    public boolean deleteOneById(Long avatarid) {
         try {
             AvatarEntity ava = iAvatarRepository.getById(avatarid);
             iAvatarRepository.deleteById(ava.getId());
