@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/Reaction")
+@RequestMapping("/api/Reaction")
 public class ReactionApi {
     @Autowired
     private ReactionService reactionService;

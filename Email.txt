@@ -1,0 +1,5 @@
+strangermatching@gmail.com
+pass: strangermatching1234
+
+cấp quyền truy cập từ ứng dụng kém an toàn
+https://myaccount.google.com/lesssecureapps?pli=1&rapt=AEjHL4MsMCrsveUbE6-2CmGzmfPu6TcXFYtYq_UILUylsjGpv3rGmXd7-oSqiQG_O7o65qgp6hKw3TavjRwISztkI-iJsRkSvQ
