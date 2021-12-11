@@ -2,7 +2,6 @@ package com.example.StrangerMatching.Api;
 
 import com.example.StrangerMatching.Common.BaseResponsibilityMessage;
 import com.example.StrangerMatching.Common.FunctionSupport;
-import com.example.StrangerMatching.CurrentData.UserMatchingStorage;
 import com.example.StrangerMatching.DTO.PasswordDTO;
 import com.example.StrangerMatching.DTO.TokenDTO;
 import com.example.StrangerMatching.DTO.UserDTO;
@@ -10,14 +9,14 @@ import com.example.StrangerMatching.Entity.UserEntity;
 import com.example.StrangerMatching.Parser.UserParser;
 import com.example.StrangerMatching.Service.EmailSendingService;
 import com.example.StrangerMatching.Service.UserService;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.parser.Entity;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Random;
 
 @RestController
 @RequestMapping("/api/User")
@@ -74,22 +73,48 @@ public class UserApi {
         return ResponseEntity.status(200).body(BaseResponsibilityMessage.UpdatingSuccessfully);
     }
 
-    @PostMapping("/FogetPassword")
-    public ResponseEntity fogetPassword(@RequestBody UserEntity userET) {
+    @PostMapping("/FogotPassword")
+    public ResponseEntity fogotPassword(@RequestBody UserEntity userET, HttpServletRequest request) {
         UserEntity user = userService.getOneByEmail(userET.getEmail());
         if (user == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BaseResponsibilityMessage.NotFound);
 
-        int minLen = 100000000;
-        int RdPassword = (new Random().nextInt(1000000000 - minLen)) + minLen;
+        String token = RandomString.make(45);
+        user.setResetPasswordToken(token);
 
-        emailSendingService.sendSimpleEmail(user.getEmail(),
-                "Your new password is: " + RdPassword + "\nPlease change it to your own password, sorry about this inconvenience",
-                ""
-        );
+        if (userService.updateInformation(user.getEmail(), user) != null) {
+            String resetPasswordLink = FunctionSupport.getSiteURL(request) + "/api/User/resetPassword/" + token;
 
-        userService.changePassword(user.getEmail(), FunctionSupport.getMD5(RdPassword + ""));
-        return ResponseEntity.status(200).body(BaseResponsibilityMessage.UpdatingSuccessfully);
+            emailSendingService.sendSimpleEmail(user.getEmail(),
+                    "<p>We will send a new password to your mail after you click to th link:</p><a href=" + resetPasswordLink +
+                            "> ResetPassword </a><p>Please change it to your own password, sorry about this inconvenience</p>",
+                    ""
+            );
+            return ResponseEntity.status(200).body(BaseResponsibilityMessage.CheckYourMailbox);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
+    }
+
+    @GetMapping("/resetPassword/{token}")
+    public ResponseEntity resetPassword(@PathVariable("token") String token ) {
+        UserEntity user = userService.getOneByResetPasswordToken(token);
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BaseResponsibilityMessage.NotFound);
+
+        String nPassword = RandomString.make(8);
+        // set new random token
+        user.setResetPasswordToken(RandomString.make(45));
+        user.setPassword(FunctionSupport.getMD5(nPassword));
+
+        if (userService.updateInformation(user.getEmail(), user) != null) {
+            emailSendingService.sendSimpleEmail(user.getEmail(),
+                    "<p>Your new password is: " + nPassword +"</p>"+
+                            "<p>Please change it to your own password, sorry about this inconvenience</p>",
+                    ""
+            );
+            return ResponseEntity.status(200).body(BaseResponsibilityMessage.CheckYourMailbox);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
     }
 
     @PutMapping("/Information/{email}")

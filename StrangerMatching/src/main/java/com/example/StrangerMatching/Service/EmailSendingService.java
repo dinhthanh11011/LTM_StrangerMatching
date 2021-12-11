@@ -19,14 +19,19 @@ public class EmailSendingService {
     public void sendSimpleEmail(String toEmail,
                                 String body,
                                 String subject) {
-        SimpleMailMessage message = new SimpleMailMessage();
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        message.setTo(toEmail);
-        message.setText(body);
-        message.setSubject(subject);
-
-        mailSender.send(message);
-        System.out.println("Mail Send...");
+        try {
+            helper.setTo(toEmail);
+            helper.setText(body,true);
+            message.setSubject(subject);
+            mailSender.send(message);
+            System.out.println("Mail Send...");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            System.out.println("Something went wrong when send mail");
+        }
     }
 
     public void sendEmailWithAttachment(String toEmail,

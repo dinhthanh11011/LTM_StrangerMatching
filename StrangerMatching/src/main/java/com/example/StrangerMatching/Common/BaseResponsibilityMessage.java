@@ -9,5 +9,6 @@ public class BaseResponsibilityMessage {
     public static final String InformationIsNotCorrect = "Your information is not the correct!";
     public static final String NotFound = "Not Found!";
     public static final String EmailWasUsed = "This email was used!";
+    public static final String CheckYourMailbox = "Please check your mailbox!";
 
 }

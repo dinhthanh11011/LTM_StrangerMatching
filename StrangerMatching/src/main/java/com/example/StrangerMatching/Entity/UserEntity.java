@@ -20,7 +20,8 @@ public class UserEntity {
     @Column(name = "story",columnDefinition = "text")
     private String story;
 
-
+    @Column(name = "reset_password_token",columnDefinition = "text")
+    private String resetPasswordToken;
 
     @Column(name = "age",nullable = false)
     private int age;
@@ -49,8 +50,13 @@ public class UserEntity {
     @JoinColumn(name = "gender_preference_id", referencedColumnName = "id",nullable = false)
     private GenderEntity genderPreference;
 
+    public String getResetPasswordToken() {
+        return resetPasswordToken;
+    }
 
-
+    public void setResetPasswordToken(String resetPasswordToken) {
+        this.resetPasswordToken = resetPasswordToken;
+    }
 
     public UserEntity() {
     }

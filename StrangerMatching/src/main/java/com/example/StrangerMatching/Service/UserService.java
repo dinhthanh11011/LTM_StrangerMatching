@@ -29,6 +29,10 @@ public class UserService {
         return iUserRepository.findByEmail(email);
     }
 
+    public UserEntity getOneByResetPasswordToken(String resetPasswordToken) {
+        return iUserRepository.findByResetPasswordToken(resetPasswordToken);
+    }
+
     public UserEntity createOne(UserEntity user) {
         try {
             if (iUserRepository.existsByEmail(user.getEmail()) || !validUserInfo(user))
@@ -58,10 +62,10 @@ public class UserService {
     public UserEntity updateInformation(String email, UserEntity newUserInfo) {
         try {
             UserEntity user = iUserRepository.findByEmail(email);
-            if (!newUserInfo.getName().isEmpty())
+            if (newUserInfo.getName() != null && !newUserInfo.getName().isEmpty())
                 user.setName(newUserInfo.getName());
 
-            if (!newUserInfo.getStory().isEmpty())
+            if (newUserInfo.getStory() != null && !newUserInfo.getStory().isEmpty())
                 user.setStory(newUserInfo.getStory());
 
             if (newUserInfo.getAge() > 0)
@@ -81,6 +85,9 @@ public class UserService {
 
             if (newUserInfo.getGenderPreference() != null)
                 user.setGenderPreference(newUserInfo.getGenderPreference());
+
+            if (newUserInfo.getResetPasswordToken() != null && !newUserInfo.getResetPasswordToken().isEmpty())
+                user.setResetPasswordToken(newUserInfo.getResetPasswordToken());
 
             if (!validUserInfo(user))
                 return null;

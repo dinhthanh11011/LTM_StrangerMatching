@@ -1,5 +1,6 @@
 package com.example.StrangerMatching.Common;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.MessageDigest;
 import java.text.Normalizer;
 import java.util.regex.Matcher;
@@ -40,6 +41,11 @@ public class FunctionSupport {
             sb.append(Integer.toString((data[i] & 0xff) + 0x100, 16).substring(1));
         }
         return sb.toString();
+    }
+
+    public static String getSiteURL(HttpServletRequest request){
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(),"");
     }
 
 }
