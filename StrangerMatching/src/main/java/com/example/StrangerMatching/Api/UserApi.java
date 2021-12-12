@@ -33,20 +33,45 @@ public class UserApi {
     }
 
     @PostMapping("/Register")
-    public ResponseEntity postOne(@RequestBody UserEntity user) {
+    public ResponseEntity postOne(@RequestBody UserEntity user, HttpServletRequest request) {
         if (!UserDTO.userInfoValidation(user))
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(BaseResponsibilityMessage.InformationIsNotCorrect);
 
-        if (userService.getOneByEmail(user.getEmail()) != null)
+        UserEntity ckUser = userService.getOneByEmail(user.getEmail());
+
+        if (ckUser != null && ckUser.isEmailConfirm())
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(BaseResponsibilityMessage.EmailWasUsed);
 
-        if (userService.createOne(user) == null)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
+        String token = RandomString.make(45);
+        user.setEmailConfirmToken(token);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponsibilityMessage.CreatingSuccessfully);
+        if (userService.createOne(user) == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
+        }
+
+        String resetPasswordLink = FunctionSupport.getSiteURL(request) + "/api/User/Register/Confirm/" + token;
+        emailSendingService.sendSimpleEmail(user.getEmail(),
+                "<p>Click to the link to active your account:</p> <a href=" + resetPasswordLink +
+                        ">Active</a><p>Sorry about this inconvenience</p>",
+                ""
+        );
+        return ResponseEntity.status(200).body(BaseResponsibilityMessage.CheckYourMailbox);
     }
 
-    @PostMapping("/Login")
+    @GetMapping("/Register/Confirm/{token}")
+    public ResponseEntity emailConfirm(@PathVariable("token") String token) {
+        UserEntity user = userService.getOneByEmailConfirmToken(token);
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BaseResponsibilityMessage.NotFound);
+
+        user.setEmailConfirm(true);
+
+        if (userService.updateInformation(user.getEmail(), user) == null)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
+        return ResponseEntity.status(200).body(BaseResponsibilityMessage.UpdatingSuccessfully);
+    }
+
+    @PostMapping(value = "/Login")
     public ResponseEntity login(@RequestBody UserEntity user) {
         UserEntity userEntity = userService.getOneByEmail(user.getEmail());
         if (userEntity == null)
@@ -55,7 +80,10 @@ public class UserApi {
         if (!userEntity.getPassword().equals(FunctionSupport.getMD5(user.getPassword())))
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(BaseResponsibilityMessage.InformationIsNotCorrect);
 
-        return ResponseEntity.status(200).body(new TokenDTO("acasfsdg"));
+        if (!userEntity.isEmailConfirm())
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(BaseResponsibilityMessage.CheckYourMailToConfirmAccountBeforeLogin);
+
+        return ResponseEntity.status(200).body(new TokenDTO("acasfsdg", user.getEmail()));
     }
 
     @PutMapping("/ChangePassword/{email}")
@@ -96,7 +124,7 @@ public class UserApi {
     }
 
     @GetMapping("/resetPassword/{token}")
-    public ResponseEntity resetPassword(@PathVariable("token") String token ) {
+    public ResponseEntity resetPassword(@PathVariable("token") String token) {
         UserEntity user = userService.getOneByResetPasswordToken(token);
         if (user == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BaseResponsibilityMessage.NotFound);
@@ -108,7 +136,7 @@ public class UserApi {
 
         if (userService.updateInformation(user.getEmail(), user) != null) {
             emailSendingService.sendSimpleEmail(user.getEmail(),
-                    "<p>Your new password is: " + nPassword +"</p>"+
+                    "<p>Your new password is: " + nPassword + "</p>" +
                             "<p>Please change it to your own password, sorry about this inconvenience</p>",
                     ""
             );

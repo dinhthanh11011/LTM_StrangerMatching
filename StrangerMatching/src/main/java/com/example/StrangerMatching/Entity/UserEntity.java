@@ -11,44 +11,66 @@ public class UserEntity {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "password",nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "name",nullable = false, columnDefinition = "text")
+    @Column(name = "name", nullable = false, columnDefinition = "text")
     private String name;
 
-    @Column(name = "story",columnDefinition = "text")
+    @Column(name = "story", columnDefinition = "text")
     private String story;
 
-    @Column(name = "reset_password_token",columnDefinition = "text")
+    @Column(name = "reset_password_token", columnDefinition = "text")
     private String resetPasswordToken;
 
-    @Column(name = "age",nullable = false)
+    @Column(name = "age", nullable = false)
     private int age;
 
-    @Column(name = "age_preference_from",nullable = false)
+    @Column(name = "age_preference_from", nullable = false)
     private int agePreferenceFrom;
 
-    @Column(name = "age_preference_to",nullable = false)
+    @Column(name = "age_preference_to", nullable = false)
     private int agePreferenceTo;
+
+    @Column(name = "is_email_confirm")
+    private boolean isEmailConfirm;
+
+    @Column(name = "email_confirm_token", columnDefinition = "text")
+    private String emailConfirmToken;
 
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "avatar_id", referencedColumnName = "id",nullable = false)
+    @JoinColumn(name = "avatar_id", referencedColumnName = "id", nullable = false)
     private AvatarEntity avatar;
 
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "gender_id", referencedColumnName = "id",nullable = false)
+    @JoinColumn(name = "gender_id", referencedColumnName = "id", nullable = false)
     private GenderEntity gender;
 
     @ManyToOne
     @JsonBackReference
     @JsonIgnore
-    @JoinColumn(name = "gender_preference_id", referencedColumnName = "id",nullable = false)
+    @JoinColumn(name = "gender_preference_id", referencedColumnName = "id", nullable = false)
     private GenderEntity genderPreference;
+
+    public String getEmailConfirmToken() {
+        return emailConfirmToken;
+    }
+
+    public void setEmailConfirmToken(String emailConfirmToken) {
+        this.emailConfirmToken = emailConfirmToken;
+    }
+
+    public boolean isEmailConfirm() {
+        return isEmailConfirm;
+    }
+
+    public void setEmailConfirm(boolean emailConfirm) {
+        isEmailConfirm = emailConfirm;
+    }
 
     public String getResetPasswordToken() {
         return resetPasswordToken;

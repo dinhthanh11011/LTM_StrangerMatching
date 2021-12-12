@@ -10,5 +10,6 @@ public class BaseResponsibilityMessage {
     public static final String NotFound = "Not Found!";
     public static final String EmailWasUsed = "This email was used!";
     public static final String CheckYourMailbox = "Please check your mailbox!";
+    public static final String CheckYourMailToConfirmAccountBeforeLogin = "Please check your mail to confirm to confirm account before login!";
 
 }

@@ -33,14 +33,19 @@ public class UserService {
         return iUserRepository.findByResetPasswordToken(resetPasswordToken);
     }
 
+    public UserEntity getOneByEmailConfirmToken(String emailConfirmToken) {
+        return iUserRepository.findByEmailConfirmToken(emailConfirmToken);
+    }
+
     public UserEntity createOne(UserEntity user) {
         try {
-            if (iUserRepository.existsByEmail(user.getEmail()) || !validUserInfo(user))
+            if (!validUserInfo(user))
                 return null;
             user.setPassword(FunctionSupport.getMD5(user.getPassword()));
             user.setAgePreferenceFrom(17);
             user.setAgePreferenceTo(35);
             user.setGenderPreference(user.getGender());
+            user.setEmailConfirm(false);
             return iUserRepository.save(user);
         } catch (Exception e) {
             e.printStackTrace();
