@@ -33,7 +33,7 @@ public class MessageEntity {
     @JoinColumn(name = "send_to", referencedColumnName = "Email",nullable = false)
     private UserEntity sendTo;
 
-    @OneToMany(mappedBy = "message")
+    @OneToMany(mappedBy = "message", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     @JsonIgnore
     private List<MessageImageEntity> images;

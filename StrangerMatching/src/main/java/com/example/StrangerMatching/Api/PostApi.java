@@ -30,7 +30,7 @@ public class PostApi {
         return PostParser.ToListDTO(postService.getAll());
     }
 
-    @PostMapping(value = "",produces = "application/json")
+    @PostMapping(value = "")
     public ResponseEntity postOne(@ModelAttribute PostWithFilesDTO post) {
         PostEntity nPost = new PostEntity();
         nPost.setCaption(post.getCaption());

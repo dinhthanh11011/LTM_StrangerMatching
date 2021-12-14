@@ -5,17 +5,26 @@ import com.example.StrangerMatching.Common.FileUploadSupport;
 public class AvatarDTO {
     private Long id;
     private String name;
+    private String displayName;
     private String path;
 
     public AvatarDTO() {
     }
 
-    public AvatarDTO(Long id, String name) {
+    public AvatarDTO(Long id, String name, String displayName) {
         this.id = id;
         this.name = name;
-        this.path = FileUploadSupport.UPLOAD_FOLDER_NAME+this.name;
+        this.displayName = displayName;
+        this.path = FileUploadSupport.UPLOAD_FOLDER_NAME + this.name;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
     public Long getId() {
         return id;
@@ -34,7 +43,7 @@ public class AvatarDTO {
     }
 
     public String getPath() {
-        return FileUploadSupport.UPLOAD_FOLDER_NAME+this.name;
+        return FileUploadSupport.UPLOAD_FOLDER_NAME + this.name;
     }
 
     public void setPath(String path) {

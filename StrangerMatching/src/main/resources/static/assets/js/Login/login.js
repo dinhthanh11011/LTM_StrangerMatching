@@ -10,7 +10,7 @@ $(document).ready(() => {
             contentType: "application/json",
         }).done(res => {
             localStorage.setItem("email", res.email)
-            document.location = ""
+            document.location = "/"
         }).fail(err => {
             Swal.fire({
                 icon: 'error',

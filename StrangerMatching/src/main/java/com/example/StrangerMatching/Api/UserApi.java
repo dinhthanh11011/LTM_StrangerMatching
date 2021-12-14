@@ -7,7 +7,7 @@ import com.example.StrangerMatching.DTO.TokenDTO;
 import com.example.StrangerMatching.DTO.UserDTO;
 import com.example.StrangerMatching.Entity.UserEntity;
 import com.example.StrangerMatching.Parser.UserParser;
-import com.example.StrangerMatching.Service.EmailSendingService;
+import com.example.StrangerMatching.Service.MailSending.EmailSendingService;
 import com.example.StrangerMatching.Service.UserService;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,12 @@ public class UserApi {
         return UserParser.ToListDTO(userService.getAll());
     }
 
+
+    @GetMapping("/Info")
+    public UserDTO getUserLoginInfo(@RequestParam String email) {
+        return UserParser.ToDTO(userService.getOneByEmail(email));
+    }
+
     @PostMapping("/Register")
     public ResponseEntity postOne(@RequestBody UserEntity user, HttpServletRequest request) {
         if (!UserDTO.userInfoValidation(user))
@@ -49,12 +55,12 @@ public class UserApi {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
         }
 
-        String resetPasswordLink = FunctionSupport.getSiteURL(request) + "/api/User/Register/Confirm/" + token;
-        emailSendingService.sendSimpleEmail(user.getEmail(),
-                "<p>Click to the link to active your account:</p> <a href=" + resetPasswordLink +
-                        ">Active</a><p>Sorry about this inconvenience</p>",
-                ""
-        );
+//        String AccountActiveLink = FunctionSupport.getSiteURL(request) + "/api/User/Register/Confirm/" + token;
+//        emailSendingService.sendSimpleEmail(user.getEmail(),
+//                "<p>Click to the link to active your account:</p> <a href=" + AccountActiveLink +
+//                        ">Active</a><p>Sorry about this inconvenience</p>",
+//                ""
+//        );
         return ResponseEntity.status(200).body(BaseResponsibilityMessage.CheckYourMailbox);
     }
 
@@ -64,9 +70,7 @@ public class UserApi {
         if (user == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BaseResponsibilityMessage.NotFound);
 
-        user.setEmailConfirm(true);
-
-        if (userService.updateInformation(user.getEmail(), user) == null)
+        if (userService.activeAccount(user.getEmail()) == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
         return ResponseEntity.status(200).body(BaseResponsibilityMessage.UpdatingSuccessfully);
     }
@@ -80,8 +84,8 @@ public class UserApi {
         if (!userEntity.getPassword().equals(FunctionSupport.getMD5(user.getPassword())))
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(BaseResponsibilityMessage.InformationIsNotCorrect);
 
-        if (!userEntity.isEmailConfirm())
-            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(BaseResponsibilityMessage.CheckYourMailToConfirmAccountBeforeLogin);
+//        if (!userEntity.isEmailConfirm())
+//            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(BaseResponsibilityMessage.CheckYourMailToConfirmAccountBeforeLogin);
 
         return ResponseEntity.status(200).body(new TokenDTO("acasfsdg", user.getEmail()));
     }

@@ -12,11 +12,24 @@ public class AvatarEntity {
     @Column(name = "name",nullable = false)
     private String name;
 
+
+    @Column(name = "display_name",nullable = false)
+    private String displayName;
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
     public AvatarEntity() {
     }
 
-    public AvatarEntity(String name) {
+    public AvatarEntity(String name,String displayName) {
         this.name = name;
+        this.displayName = displayName;
     }
 
     public Long getId() {

@@ -40,7 +40,7 @@ public class PostService {
         try {
             post.setCreatedDate(new Date());
             PostEntity createdPost = iPostRepository.save(post);
-            if (files != null && files.length > 0) {
+            if (files != null && files.length > 0 && !files[0].getOriginalFilename().isEmpty()) {
                 for (MultipartFile file : files) {
                     File up = FileUploadSupport.uploadOne(file);
                     if (up != null) {
@@ -82,7 +82,7 @@ public class PostService {
                     pre.setReaction(postReaction.getReaction());
                     return iPostReactionRepository.save(pre);
                 }
-                iPostReactionRepository.deleteById(pre.getReaction().getId());
+                iPostReactionRepository.deleteById(pre.getId());
                 return postReaction;
             }
 

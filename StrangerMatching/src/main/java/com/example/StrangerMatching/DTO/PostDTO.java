@@ -1,10 +1,8 @@
 package com.example.StrangerMatching.DTO;
 
-import com.example.StrangerMatching.Entity.PostCommentEntity;
 import com.example.StrangerMatching.Entity.PostImageEntity;
 import com.example.StrangerMatching.Entity.PostReactionEntity;
 import com.example.StrangerMatching.Entity.UserEntity;
-import com.example.StrangerMatching.Parser.PostCommentParser;
 import com.example.StrangerMatching.Parser.PostImageParse;
 import com.example.StrangerMatching.Parser.PostReactionParser;
 import com.example.StrangerMatching.Parser.UserParser;

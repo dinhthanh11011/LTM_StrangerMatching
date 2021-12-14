@@ -64,6 +64,17 @@ public class UserService {
         }
     }
 
+    public UserEntity activeAccount(String email){
+        try {
+            UserEntity user = iUserRepository.findByEmail(email);
+            user.setEmailConfirm(true);
+            return iUserRepository.save(user);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public UserEntity updateInformation(String email, UserEntity newUserInfo) {
         try {
             UserEntity user = iUserRepository.findByEmail(email);

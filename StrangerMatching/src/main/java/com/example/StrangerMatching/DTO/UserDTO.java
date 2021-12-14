@@ -9,7 +9,7 @@ public class UserDTO {
     private String story;
     private AvatarDTO avatar;
     private int age;
-    private int agePreferenceForm;
+    private int agePreferenceFrom;
     private int agePreferenceTo;
     private GenderDTO gender;
     private GenderDTO genderPreference;
@@ -54,12 +54,12 @@ public class UserDTO {
         this.age = age;
     }
 
-    public int getAgePreferenceForm() {
-        return agePreferenceForm;
+    public int getAgePreferenceFrom() {
+        return agePreferenceFrom;
     }
 
-    public void setAgePreferenceForm(int agePreferenceForm) {
-        this.agePreferenceForm = agePreferenceForm;
+    public void setAgePreferenceFrom(int agePreferenceFrom) {
+        this.agePreferenceFrom = agePreferenceFrom;
     }
 
     public int getAgePreferenceTo() {

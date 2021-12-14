@@ -8,7 +8,7 @@ import java.util.List;
 
 public class AvatarParser {
     public static AvatarDTO ToDTO(AvatarEntity avatar){
-        return new AvatarDTO(avatar.getId(), avatar.getName());
+        return new AvatarDTO(avatar.getId(), avatar.getName(),avatar.getDisplayName());
     }
 
     public static List<AvatarDTO> ToListDTO(List<AvatarEntity> avatars){

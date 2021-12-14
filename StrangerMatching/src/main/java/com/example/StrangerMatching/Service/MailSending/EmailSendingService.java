@@ -1,4 +1,4 @@
-package com.example.StrangerMatching.Service;
+package com.example.StrangerMatching.Service.MailSending;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;

@@ -1,6 +1,10 @@
 package com.example.StrangerMatching.CurrentData;
 
+import com.example.StrangerMatching.DTO.UserDTO;
 import com.example.StrangerMatching.Entity.UserEntity;
+import com.example.StrangerMatching.Parser.UserParser;
+import com.example.StrangerMatching.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 
 import java.util.ArrayList;
@@ -33,7 +37,16 @@ public class UserMatchingStorage {
         return usersWaitingToChatMatching;
     }
 
-    public boolean findUserOnlineByEmail(String email) {
+    public List<UserDTO> getListUserDTOOnline(){
+        List<UserDTO> dtos = new ArrayList<>();
+        for (SimpMessageHeaderAccessor socket:usersOnlineSHA) {
+            UserDTO dto = UserParser.ToDTO((UserEntity)socket.getSessionAttributes().get("User"));
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
+    public boolean checkUserOnlineByEmail(String email) {
         for (SimpMessageHeaderAccessor userOnline : usersOnlineSHA) {
             if (userOnline.getSessionAttributes().get("email").equals(email))
                 return true;
