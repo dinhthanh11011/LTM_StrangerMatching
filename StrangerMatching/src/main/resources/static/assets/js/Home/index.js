@@ -318,14 +318,14 @@ function loadListPosts() {
                                     </a>
                                 </div>
                                 <div class="col-5">
-                                    <a href="">
+                                    <a class="text-decoration-none " href="">
                                         <i class="fa fa-comments" aria-hidden="true"></i><span>
                                             Bình luận</span>
                                     </a>
                                 </div>`
             if (userInfo.email == item.user.email) {
                 html += ` <div class="col-2">
-                                    <a href="" class="post-delete">
+                                    <a href="" class="post-delete text-decoration-none ">
                                         <i class="fa fa-trash text-danger" aria-hidden="true"></i>
                                     </a>
                                 </div>`

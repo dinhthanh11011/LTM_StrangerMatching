@@ -7,13 +7,12 @@
     <title>Home</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
-    <link rel="stylesheet" href="assets/css/post.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome5-overrides.min.css">
 </head>
 
 <body id="page-top">
@@ -89,7 +88,7 @@
                                     <div id="announce-messages-list">
                                         <a class="d-none dropdown-item d-flex align-items-center" href="#">
                                             <div class="dropdown-list-image me-3"><img class="rounded-circle"
-                                                                                       src="assets/img/avatars/avatar4.jpeg">
+                                                                                       src="/assets/img/avatars/avatar4.jpeg">
                                                 <div class="bg-success status-indicator"></div>
                                             </div>
                                             <div class="fw-bold">
@@ -113,7 +112,7 @@
                                     class="d-none d-lg-inline me-2 text-gray-600 small"
                                     id="user-info-name">Valerie Luna</span><img id="user-info-avatar"
                                                                                 class="border rounded-circle img-profile"
-                                                                                src="assets/img/avatars/avatar1.jpeg"></a>
+                                                                                src="/assets/img/avatars/avatar1.jpeg"></a>
                                 <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                                     <a
                                             class="dropdown-item" href="#"><i
@@ -144,7 +143,7 @@
                     </ul>
                 </div>
             </nav>
-            <div class="container-fluid">
+            <div class="container-fluid w-75">
                 <div class="row">
                     <div class="col-4">
                         <h4><span id="txt-total-user-online">-1</span> Online </h4>
@@ -152,7 +151,7 @@
                             <li class="nav-item d-none">
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image me-3"><img width="50px" class="rounded-circle"
-                                                                               src="assets/img/avatars/avatar4.jpeg">
+                                                                               src="/assets/img/avatars/avatar4.jpeg">
                                         <div class="bg-success status-indicator"></div>
                                     </div>
                                     <div class="fw-bold">
@@ -171,7 +170,7 @@
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image me-3"><img width="50px" height="50px"
                                                                                class="rounded-circle"
-                                                                               src="assets/img/avatars/avatar4.jpeg">
+                                                                               src="/assets/img/avatars/avatar4.jpeg">
                                         <div class="bg-success status-indicator"></div>
                                     </div>
                                     <div class="fw-bold">
@@ -187,7 +186,7 @@
                                 <div class="post-body-img flex-row flex-wrap my-2 p-2">
                                     <div class="row justify-content-center">
                                         <img style="width: 45%;" class="img-fluid m-1"
-                                             src="assets/img/dogs/image1.jpeg">
+                                             src="/assets/img/dogs/image1.jpeg">
                                     </div>
                                 </div>
                             </div>
@@ -309,7 +308,14 @@
                             </div>
                         </div>
                     </div>
-                    <h4 class="my-2">Matching info</h4>
+                    <div class="row mb-3">
+                        <div class="col-sm-12 mb-6 mb-sm-3">
+                            <label class="form-label">Story</label>
+                            <textarea required class="form-control "
+                                      rows="2" name="story"></textarea>
+                        </div>
+                    </div>
+                    <h4 class="my-3">Matching info</h4>
                     <div class="row mb-3">
                         <div class="col-4">
                             <label class="form-label">Gender matching</label>
@@ -376,7 +382,7 @@
 <!-- end Modal change password-->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/theme.js"></script>
+<script src="/assets/js/theme.js"></script>
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -393,9 +399,9 @@
 <!--    end libs for stomp and sockjs-->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="assets/js/form_data_to_json.js"></script>
-<script src="assets/js/Home/index.js?v=@DateTime.UtcNow.ToString()"></script>
-<script src="assets/js/Home/index_socket.js?v=@DateTime.UtcNow.ToString()"></script>
+<script src="/assets/js/form_data_to_json.js"></script>
+<script src="/assets/js/Home/index.js?v=@DateTime.UtcNow.ToString()"></script>
+<script src="/assets/js/Home/index_socket.js?v=@DateTime.UtcNow.ToString()"></script>
 </body>
 
 </html>
