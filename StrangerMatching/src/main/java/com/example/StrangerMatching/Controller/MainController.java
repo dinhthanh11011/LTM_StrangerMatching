@@ -34,4 +34,9 @@ public class MainController {
         return "chattingOneByOne";
     }
 
+    @GetMapping("/Message")
+    public String Chatting() {
+        return "message";
+    }
+
 }

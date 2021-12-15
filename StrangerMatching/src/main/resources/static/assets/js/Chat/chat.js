@@ -20,7 +20,8 @@ function loadAllMessage() {
     }).done(data => {
         messages = JSON.parse(JSON.stringify(data))
 
-        $("#chatting-block div").remove()
+        let chatBlock = "#chatting-block"
+        $(`${chatBlock} div`).remove()
         data.forEach(item => {
             let html = ``
             if (item.sendFrom.email == currentUser.email) {
@@ -49,8 +50,10 @@ function loadAllMessage() {
                 </div>
                 `
             }
-            $("#chatting-block").append(html)
+            $(chatBlock).append(html)
         })
+        $(chatBlock).scrollTop($(chatBlock)[0].scrollHeight);
+
     })
 }
 
@@ -74,5 +77,4 @@ function loadCurrentUserInfo() {
     }).done(data => {
         currentUser = JSON.parse(JSON.stringify(data))
     })
-
 }
