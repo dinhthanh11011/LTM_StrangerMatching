@@ -32,7 +32,7 @@ function loadAllMessage() {
                         <span class="msg_time_send">${new Date(item.createdDate).toLocaleString()}</span>
                     </div>
                     <div class="img_cont_msg">
-                        <img src="${item.sendFrom.avatar.path}" class="rounded-circle user_img_msg">
+                        <img src="${item.sendFrom.avatar.path}" style="object-fit: cover" class="rounded-circle user_img_msg">
                     </div>
                 </div>
                 `
@@ -41,6 +41,7 @@ function loadAllMessage() {
                 <div class="d-flex justify-content-start mb-4">
                     <div class="img_cont_msg">
                         <img src="${item.sendFrom.avatar.path}"
+                            style="object-fit: cover"
                             class="rounded-circle user_img_msg">
                     </div>
                     <div class="msg_cotainer" style="min-width: 120px">

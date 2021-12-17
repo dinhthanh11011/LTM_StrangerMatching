@@ -39,8 +39,9 @@ function loadListAnnounMessages(elementTotal,elementList, data) {
     $(`${elementList} a`).remove()
     data.forEach(item => {
         let html = `
-        <a class="dropdown-item d-flex align-items-center" href="/Chatting/${item.sendFrom.email}">
+        <a class="dropdown-item d-flex align-items-center" href="/Message/${item.sendFrom.email}">
             <div class="dropdown-list-image me-3"><img class="rounded-circle" width="50px" height="50px"
+                                                        style="object-fit: cover"
                                                        src="${item.sendFrom.avatar.path}">
                 <div class="bg-success status-indicator"></div>
             </div>
@@ -64,8 +65,9 @@ function loadUserOnlineList(elementTotal, elementList, data) {
         let html =
             `
             <li class="nav-item">
-                <a class="dropdown-item d-flex align-items-center" href="/Chatting/${item.email}">
+                <a class="dropdown-item d-flex align-items-center" href="/Message/${item.email}">
                     <div class="dropdown-list-image me-3"><img width="50px" height="50px" class="rounded-circle"
+                            style="object-fit: cover"
                             src="${item.avatar.path}">
                         <div class="bg-success status-indicator"></div>
                     </div>

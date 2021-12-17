@@ -11,6 +11,8 @@ let reactionList = []
 let avatars = []
 let genders = []
 
+let postSelectedId = ""
+
 
 let element_FormUpdateUserInfo = "#form-update-user-info"
 let element_SelectionAvatar = `${element_FormUpdateUserInfo} select[name="avatar"]`
@@ -47,6 +49,12 @@ $(document).ready(() => {
         likePost(e)
     })
 
+    $(document).on("click", "#btn-open-modal-post-comment", e => {
+        e.preventDefault()
+        let postId = $(e.currentTarget).closest(".post").attr("data-id")
+        loadPostComment(e,postId)
+    })
+
     $(element_SelectionAvatar).change(e => {
         loadPreviewAvatarAfterChoice(e)
     })
@@ -61,13 +69,85 @@ $(document).ready(() => {
         logout(e)
     })
 
+    $("#form-post-comment").submit(e => {
+        e.preventDefault()
+        postComment(e, postSelectedId)
+    })
 
 })
-function logout(e){
+
+function logout(e) {
     alert("logout chua lam :))")
 }
 
-function changePassword(e){
+function postComment(e, postId) {
+    let data = $(e.target).serializeFormJSON()
+    data.post = {
+        id: postId
+    }
+    data.user = userInfo
+    $.ajax({
+        url: postUrl + "Comment",
+        method: "POST",
+        data: JSON.stringify(data),
+        contentType: "application/json"
+    }).done(res => {
+        loadPostComment(e,postId)
+        $(e.target)[0].reset()
+    }).fail(err => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.responseText,
+        })
+    })
+}
+
+function loadPostComment(e,postId) {
+    postSelectedId = postId
+    $.ajax({
+        url: postUrl + "Comment/" + postId,
+        method: "GET"
+    }).done(res => {
+        let postCommentErea = "#post-comment-area"
+        $(`${postCommentErea} div`).remove()
+        if (res.length > 0) {
+            res.forEach(item => {
+                let html = `
+                    <div class="m-2">
+                        <a class="dropdown-item d-flex align-items-center" href="/Message/${item.user.email}">
+                            <div class="dropdown-list-image me-3"><img width="50px" height="50px" class="rounded-circle"
+                                                                        style="object-fit: cover"
+                                                                       src="${item.user.avatar.path}">
+                                <div class="bg-success status-indicator"></div>
+                            </div>
+                            <div class="fw-bold">
+                                <div class="text-truncate"><span>${item.user.name}</span> <span
+                                        class="small text-gray-700 ml-2">${item.user.gender.name} - ${item.user.age}</span></div>
+                                <p class="small text-gray-500 my-1">${new Date(item.createdDate).toLocaleString()}</p>
+                                <p class="small text-gray-800 mb-0">${item.text}</p>
+                            </div>
+                        </a>
+                        <hr class="sidebar-divider my-1">
+                    </div>
+                `
+                $(postCommentErea).append(html)
+            })
+            $(postCommentErea).scrollTop($(postCommentErea)[0].scrollHeight);
+        } else {
+            $(postCommentErea).append(`Bài viết chưa có bình luận nào!`)
+        }
+
+    }).fail(err => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.responseText,
+        })
+    })
+}
+
+function changePassword(e) {
     Swal.fire({
         title: 'Do you want to change your password?',
         showCancelButton: true,
@@ -75,7 +155,7 @@ function changePassword(e){
     }).then((result) => {
         if (result.isConfirmed) {
             let data = $(e.target).serializeFormJSON()
-            if(data.newPassword == data.newPasswordConfirm){
+            if (data.newPassword == data.newPasswordConfirm) {
                 $.ajax({
                     url: userUrl + "ChangePassword/" + userInfo.email,
                     method: "PUT",
@@ -96,7 +176,7 @@ function changePassword(e){
                         text: err.responseText,
                     })
                 })
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -152,12 +232,12 @@ function loadUserInfoToUpdateModal(e) {
     $(`${element_FormUpdateUserInfo} input[name="name"]`).val(userInfo.name)
     $(`${element_FormUpdateUserInfo} input[name="age"]`).val(userInfo.age)
 
-    loadSelection(`${element_FormUpdateUserInfo} select[name="gender"]`, genders,"id","name", `Gender selection ...`, userInfo.gender.id)
-    loadSelection(element_SelectionAvatar, avatars, "id","displayName",`Avatar selection ...`, userInfo.avatar.id)
+    loadSelection(`${element_FormUpdateUserInfo} select[name="gender"]`, genders, "id", "name", `Gender selection ...`, userInfo.gender.id)
+    loadSelection(element_SelectionAvatar, avatars, "id", "displayName", `Avatar selection ...`, userInfo.avatar.id)
 
     $("#avatar-preview").attr("src", userInfo.avatar.path)
 
-    loadSelection(`${element_FormUpdateUserInfo} select[name="genderPreference"]`, genders, "id","name",`Gender selection ...`, userInfo.genderPreference.id)
+    loadSelection(`${element_FormUpdateUserInfo} select[name="genderPreference"]`, genders, "id", "name", `Gender selection ...`, userInfo.genderPreference.id)
 
     $(`${element_FormUpdateUserInfo} input[name="agePreferenceFrom"]`).val(userInfo.agePreferenceFrom)
     $(`${element_FormUpdateUserInfo} input[name="agePreferenceTo"]`).val(userInfo.agePreferenceTo)
@@ -281,8 +361,9 @@ function loadListPosts() {
             let html = `
                 <div data-id="${item.id}" class="post my-2 p-2 rounded bg-gray-100">
                     <div class="post-header my-1">
-                        <a class="dropdown-item d-flex align-items-center" href="/Chatting/${item.user.email}">
+                        <a class="dropdown-item d-flex align-items-center" href="/Message/${item.user.email}">
                             <div class="dropdown-list-image me-3"><img width="50px" height="50px" class="rounded-circle"
+                                    style="object-fit: cover"
                                     src="${item.user.avatar.path}">
                                 <div class="bg-success status-indicator"></div>
                             </div>
@@ -318,7 +399,8 @@ function loadListPosts() {
                                     </a>
                                 </div>
                                 <div class="col-5">
-                                    <a class="text-decoration-none " href="">
+                                    <a class="text-decoration-none " id="btn-open-modal-post-comment" data-bs-toggle="modal"
+                                   data-bs-target="#modal-post-comment" href="">
                                         <i class="fa fa-comments" aria-hidden="true"></i><span>
                                             Bình luận</span>
                                     </a>
@@ -405,7 +487,7 @@ function getAvatars() {
     })
 }
 
-function loadSelection(element, data,clValue,clDisplay, baseRowStr, selected_value) {
+function loadSelection(element, data, clValue, clDisplay, baseRowStr, selected_value) {
     $(`${element} option`).remove()
     if (baseRowStr != false) {
         $(element).append(`<option value="">${baseRowStr}</option>`)

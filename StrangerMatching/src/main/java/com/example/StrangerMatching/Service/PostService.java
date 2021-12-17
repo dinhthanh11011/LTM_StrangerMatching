@@ -108,6 +108,6 @@ public class PostService {
     }
 
     public List<PostCommentEntity> getAllPostComment(Long postId) {
-        return iPostCommentRepository.findAllByPost_Id(postId);
+        return iPostCommentRepository.findAllByPost_IdOrderByCreatedDateAsc(postId);
     }
 }

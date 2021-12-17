@@ -98,7 +98,8 @@
                                             </div>
                                         </a>
                                     </div>
-                                    <a class="dropdown-item text-center small text-gray-500" href="/Message">Show All</a>
+                                    <a class="dropdown-item text-center small text-gray-500" href="/Message">Show
+                                        All</a>
                                 </div>
                             </div>
                             <div class="shadow dropdown-list dropdown-menu dropdown-menu-end"
@@ -112,6 +113,7 @@
                                     class="d-none d-lg-inline me-2 text-gray-600 small"
                                     id="user-info-name">Valerie Luna</span><img id="user-info-avatar"
                                                                                 class="border rounded-circle img-profile"
+                                                                                style="object-fit: cover"
                                                                                 src="/assets/img/avatars/avatar1.jpeg"></a>
                                 <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                                     <a
@@ -135,7 +137,7 @@
                                         password
                                     </a>
                                     <div class="dropdown-divider"></div>
-                                    <a  id="btn-logout" class="dropdown-item" href="#"><i
+                                    <a id="btn-logout" class="dropdown-item" href="#"><i
                                             class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
                                 </div>
                             </div>
@@ -381,6 +383,51 @@
 </div>
 <!-- end Modal change password-->
 
+
+<!-- Modal  post comment-->
+<div class="modal fade" id="modal-post-comment" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Post comment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="post-comment-area">
+                    <div class="d-none m-2">
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="dropdown-list-image me-3"><img width="50px" class="rounded-circle"
+                                                                       src="/assets/img/avatars/avatar4.jpeg">
+                                <div class="bg-success status-indicator"></div>
+                            </div>
+                            <div class="fw-bold">
+                                <div class="text-truncate"><span>Đinh Tuấn Thành</span> <span
+                                        class="small text-gray-700 ml-2">Nam - 19</span></div>
+                                <p class="small text-gray-500 mb-0">Hello asdfnkasjn lasknflask nmlaskjmfdlk asmdf</p>
+                            </div>
+                        </a>
+                        <hr class="sidebar-divider my-1">
+                    </div>
+
+                </div>
+                <form class="mt-2" id="form-post-comment">
+                    <div class="form-group">
+                        <label>Comment</label>
+                        <textarea required rows="1" name="text" type="text" class="form-control"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                    <button form="form-post-comment" type="submit" class="btn btn-primary">Comment</button>
+<!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end Modal  post comment-->
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/theme.js"></script>
 
@@ -400,8 +447,8 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="/assets/js/form_data_to_json.js"></script>
-<script src="/assets/js/Home/index.js?v=@DateTime.UtcNow.ToString()"></script>
-<script src="/assets/js/Home/index_socket.js?v=@DateTime.UtcNow.ToString()"></script>
+<script src="/assets/js/Main/index.js?v=@DateTime.UtcNow.ToString()"></script>
+<script src="/assets/js/Main/index_socket.js?v=@DateTime.UtcNow.ToString()"></script>
 </body>
 
 </html>

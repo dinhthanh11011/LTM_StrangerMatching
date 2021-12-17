@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AdminController {
     @GetMapping("/admin/Avatar")
     public String Avatar(){
-        return "admin_avatar";
+        return "Admin/admin_avatar";
     }
 }

@@ -40,7 +40,7 @@ function receiveMessage(message,sendFrom){
         $("#chatting-block").append(`
             <div class="d-flex justify-content-start mb-4">
                 <div class="img_cont_msg">
-                    <img src="${message.sendFrom.avatar.path}"
+                    <img src="${message.sendFrom.avatar.path}" style="object-fit: cover"
                         class="rounded-circle user_img_msg">
                 </div>
                 <div class="msg_cotainer" style="min-width: 120px">
@@ -71,7 +71,7 @@ function sendMessage(sendTo) {
                     <span class="msg_time_send">${new Date().toLocaleString()}</span>
                 </div>
                 <div class="img_cont_msg">
-                    <img src="${data.sendFrom.avatar.path}" class="rounded-circle user_img_msg">
+                    <img src="${data.sendFrom.avatar.path}" style="object-fit: cover" class="rounded-circle user_img_msg">
                 </div>
             </div>
         `)

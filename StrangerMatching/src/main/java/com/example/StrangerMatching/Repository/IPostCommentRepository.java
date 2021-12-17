@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IPostCommentRepository extends JpaRepository<PostCommentEntity, Long> {
-    public List<PostCommentEntity> findAllByPost_Id(Long postId);
+    public List<PostCommentEntity> findAllByPost_IdOrderByCreatedDateAsc(Long postId);
 }
