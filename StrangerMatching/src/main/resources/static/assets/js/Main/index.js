@@ -5,7 +5,7 @@ let genderUrl = prefixUrl + "Gender"
 let postUrl = prefixUrl + "Post/"
 let userUrl = prefixUrl + "User/"
 
-let userInfo = {}
+let currentUser = {}
 
 let reactionList = []
 let avatars = []
@@ -18,11 +18,13 @@ let element_FormUpdateUserInfo = "#form-update-user-info"
 let element_SelectionAvatar = `${element_FormUpdateUserInfo} select[name="avatar"]`
 
 $(document).ready(() => {
-    getUserInfo()
+    getUserInfo(localStorage.getItem("email"))
     getListReaction()
     loadListPosts()
     getGenders()
     getAvatars()
+
+    connect(currentUser.email)
 
     $("#form-create-post").submit(e => {
         e.preventDefault()
@@ -85,7 +87,7 @@ function postComment(e, postId) {
     data.post = {
         id: postId
     }
-    data.user = userInfo
+    data.user = currentUser
     $.ajax({
         url: postUrl + "Comment",
         method: "POST",
@@ -157,7 +159,7 @@ function changePassword(e) {
             let data = $(e.target).serializeFormJSON()
             if (data.newPassword == data.newPasswordConfirm) {
                 $.ajax({
-                    url: userUrl + "ChangePassword/" + userInfo.email,
+                    url: userUrl + "ChangePassword/" + currentUser.email,
                     method: "PUT",
                     data: JSON.stringify(data),
                     contentType: "application/json"
@@ -205,7 +207,7 @@ function updateUserInfo(e) {
                 id: data.avatar
             }
             $.ajax({
-                url: userUrl + "Information/" + userInfo.email,
+                url: userUrl + "Information/" + currentUser.email,
                 method: "PUT",
                 data: JSON.stringify(data),
                 contentType: "application/json"
@@ -229,18 +231,18 @@ function updateUserInfo(e) {
 }
 
 function loadUserInfoToUpdateModal(e) {
-    $(`${element_FormUpdateUserInfo} input[name="name"]`).val(userInfo.name)
-    $(`${element_FormUpdateUserInfo} input[name="age"]`).val(userInfo.age)
+    $(`${element_FormUpdateUserInfo} input[name="name"]`).val(currentUser.name)
+    $(`${element_FormUpdateUserInfo} input[name="age"]`).val(currentUser.age)
 
-    loadSelection(`${element_FormUpdateUserInfo} select[name="gender"]`, genders, "id", "name", `Gender selection ...`, userInfo.gender.id)
-    loadSelection(element_SelectionAvatar, avatars, "id", "displayName", `Avatar selection ...`, userInfo.avatar.id)
+    loadSelection(`${element_FormUpdateUserInfo} select[name="gender"]`, genders, "id", "name", `Gender selection ...`, currentUser.gender.id)
+    loadSelection(element_SelectionAvatar, avatars, "id", "displayName", `Avatar selection ...`, currentUser.avatar.id)
 
-    $("#avatar-preview").attr("src", userInfo.avatar.path)
+    $("#avatar-preview").attr("src", currentUser.avatar.path)
 
-    loadSelection(`${element_FormUpdateUserInfo} select[name="genderPreference"]`, genders, "id", "name", `Gender selection ...`, userInfo.genderPreference.id)
+    loadSelection(`${element_FormUpdateUserInfo} select[name="genderPreference"]`, genders, "id", "name", `Gender selection ...`, currentUser.genderPreference.id)
 
-    $(`${element_FormUpdateUserInfo} input[name="agePreferenceFrom"]`).val(userInfo.agePreferenceFrom)
-    $(`${element_FormUpdateUserInfo} input[name="agePreferenceTo"]`).val(userInfo.agePreferenceTo)
+    $(`${element_FormUpdateUserInfo} input[name="agePreferenceFrom"]`).val(currentUser.agePreferenceFrom)
+    $(`${element_FormUpdateUserInfo} input[name="agePreferenceTo"]`).val(currentUser.agePreferenceTo)
 }
 
 
@@ -405,7 +407,7 @@ function loadListPosts() {
                                             Bình luận</span>
                                     </a>
                                 </div>`
-            if (userInfo.email == item.user.email) {
+            if (currentUser.email == item.user.email) {
                 html += ` <div class="col-2">
                                     <a href="" class="post-delete text-decoration-none ">
                                         <i class="fa fa-trash text-danger" aria-hidden="true"></i>
@@ -434,15 +436,16 @@ function loadPreviewAvatarAfterChoice(e) {
 
 //Base data
 //=======================================================================
-function getUserInfo() {
+function getUserInfo(email) {
     $.ajax({
-        url: userUrl + "Info?email=" + localStorage.getItem("email"),
-        method: "GET"
+        url: userUrl + "Info?email=" + email,
+        method: "GET",
+        async: false
     }).done(res => {
-        userInfo = JSON.parse(JSON.stringify(res))
-        console.log(userInfo)
-        $("#user-info-name").html(userInfo.name)
-        $("#user-info-avatar").attr("src", userInfo.avatar.path)
+        currentUser = JSON.parse(JSON.stringify(res))
+        console.log(currentUser)
+        $("#user-info-name").html(currentUser.name)
+        $("#user-info-avatar").attr("src", currentUser.avatar.path)
     }).fail(err => {
         Swal.fire({
             icon: 'error',
@@ -457,7 +460,6 @@ function getListReaction() {
     $.ajax({
         url: "/api/Reaction",
         method: "GET",
-        async: true
     }).done(res => {
         reactionList = JSON.parse(JSON.stringify(res))
     }).fail(err => {

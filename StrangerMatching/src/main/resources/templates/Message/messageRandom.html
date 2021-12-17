@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <input hidden id="user_sendTo" th:value="${user_sendTo}">
+    <input hidden id="user_sendTo">
     <div class="container-fluid h-100">
         <div class="row justify-content-center h-100">
             <div class="col-md-8 chat">
@@ -24,12 +24,12 @@
                     <div class="card-header msg_head">
                         <div class="d-flex bd-highlight">
                             <div class="img_cont">
-                                <img id="user-avatar" style="object-fit: cover" src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
+                                <img id="user-avatar" style="object-fit: cover" src=""
                                     class="rounded-circle user_img">
                                 <span id="user-online-status" class="d-none online_icon"></span>
                             </div>
                             <div class="user_info">
-                                <span id="user-name" >Chat with Khalid</span>
+                                <span id="user-name" >...</span>
                                 <p></p>
                             </div>
                             <div class="video_cam">
@@ -48,73 +48,6 @@
                         </div>
                     </div>
                     <div id="chatting-block" class="card-body msg_card_body">
-                        <div class="d-flex justify-content-start mb-4">
-                            <div class="img_cont_msg">
-                                <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
-                                    class="rounded-circle user_img_msg">
-                            </div>
-                            <div class="msg_cotainer">
-                                Hi, how are you samim?
-                                <span class="msg_time">8:40 AM, Today</span>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end mb-4">
-                            <div class="msg_cotainer_send">
-                                Hi Khalid i am good tnx how about you?
-                                <span class="msg_time_send">8:55 AM, Today</span>
-                            </div>
-                            <div class="img_cont_msg">
-                                <img src="/assets/img/avatars/avatar4.jpeg" class="rounded-circle user_img_msg">
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-start mb-4">
-                            <div class="img_cont_msg">
-                                <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
-                                    class="rounded-circle user_img_msg">
-                            </div>
-                            <div class="msg_cotainer">
-                                I am good too, thank you for your chat template
-                                <span class="msg_time">9:00 AM, Today</span>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end mb-4">
-                            <div class="msg_cotainer_send">
-                                You are welcome
-                                <span class="msg_time_send">9:05 AM, Today</span>
-                            </div>
-                            <div class="img_cont_msg">
-                                <img src="/assets/img/avatars/avatar4.jpeg" class="rounded-circle user_img_msg">
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-start mb-4">
-                            <div class="img_cont_msg">
-                                <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
-                                    class="rounded-circle user_img_msg">
-                            </div>
-                            <div class="msg_cotainer">
-                                I am looking for your next templates
-                                <span class="msg_time">9:07 AM, Today</span>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end mb-4">
-                            <div class="msg_cotainer_send">
-                                Ok, thank you have a good day
-                                <span class="msg_time_send">9:10 AM, Today</span>
-                            </div>
-                            <div class="img_cont_msg">
-                                <img src="/assets/img/avatars/avatar4.jpeg" class="rounded-circle user_img_msg">
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-start mb-4">
-                            <div class="img_cont_msg">
-                                <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
-                                    class="rounded-circle user_img_msg">
-                            </div>
-                            <div class="msg_cotainer">
-                                Bye, see you
-                                <span class="msg_time">9:12 AM, Today</span>
-                            </div>
-                        </div>
                     </div>
                     <div class="card-footer">
                         <form id="form-send-message">
@@ -143,9 +76,9 @@
         });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
             integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
@@ -161,8 +94,9 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/assets/js/form_data_to_json.js"></script>
-    <script src="/assets/js/Chat/chat.js?v=@DateTime.UtcNow.ToString()"></script>
-    <script src="/assets/js/Chat/chat_socket.js?v=@DateTime.UtcNow.ToString()"></script>
+    <script src="/assets/js/Message/messageFuncSupport.js?v=@DateTime.UtcNow.ToString()"></script>
+    <script src="/assets/js/Message/Random/messageRandom.js?v=@DateTime.UtcNow.ToString()"></script>
+    <script src="/assets/js/Message/Random/messageRandom_socket.js?v=@DateTime.UtcNow.ToString()"></script>
 </body>
 
 </html>

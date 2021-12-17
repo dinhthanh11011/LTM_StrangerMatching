@@ -1,6 +1,5 @@
 let stompClient;
 
-connect(localStorage.getItem("email"))
 
 let announMessages = []
 
@@ -17,6 +16,11 @@ function connect(email) {
             loadUserOnlineList("#txt-total-user-online", "#user-online-list", userOnlines)
         });
 
+        // đăng kí nhận thông báo số người đang chờ ghép đôi
+        stompClient.subscribe("/topic/TotalWaitingMatching" , function (response) {
+            $("#txt-total-waiting-matching").html(response.body)
+        });
+
         stompClient.subscribe("/topic/Messages/" + email, function (response) {
             // xử lý tin nhắn nhận được từ websocket
             let data = JSON.parse(response.body)
@@ -26,6 +30,8 @@ function connect(email) {
 
         // gửi req lên server để xử lý tình trạng online cũng như nhận lại danh sách user đang online
         stompClient.send("/app/Register", {}, email)
+
+        stompClient.send("/app/TotalStrangerMatching", {}, null)
 
         // gửi tin nhắn
         // stompClient.send("/app/Chat/dinhthanh11011@gmail.com",{},JSON.stringify({text:"hell", sendFrom:{email:"dinhthanh11011@gmail.com"}}))

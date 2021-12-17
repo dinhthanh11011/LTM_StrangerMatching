@@ -4,6 +4,7 @@ import com.example.StrangerMatching.DTO.UserDTO;
 import com.example.StrangerMatching.Entity.UserEntity;
 import com.example.StrangerMatching.Parser.UserParser;
 import com.example.StrangerMatching.Service.UserService;
+import com.example.StrangerMatching.WebsocketApi.WebSocketCommon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 
@@ -40,18 +41,18 @@ public class UserMatchingStorage {
     public List<UserDTO> getListUserDTOOnline(){
         List<UserDTO> dtos = new ArrayList<>();
         for (SimpMessageHeaderAccessor socket:usersOnlineSHA) {
-            UserDTO dto = UserParser.ToDTO((UserEntity)socket.getSessionAttributes().get("User"));
+            UserDTO dto = UserParser.ToDTO((UserEntity)socket.getSessionAttributes().get(WebSocketCommon.USER_ENTITY_KEY_IN_ONLINE_LIST));
             dtos.add(dto);
         }
         return dtos;
     }
 
-    public boolean checkUserOnlineByEmail(String email) {
-        for (SimpMessageHeaderAccessor userOnline : usersOnlineSHA) {
-            if (userOnline.getSessionAttributes().get("email").equals(email))
-                return true;
+    public SimpMessageHeaderAccessor getUserOnlineByEmail(String email) {
+        for (int i = 0; i < usersOnlineSHA.size(); i++) {
+            if (usersOnlineSHA.get(i).getSessionAttributes().get("email").equals(email))
+                return usersOnlineSHA.get(i);
         }
-        return false;
+        return null;
     }
 
     public void disconnectUserBySessionId(String sessionId) {

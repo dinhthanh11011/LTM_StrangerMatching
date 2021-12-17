@@ -15,15 +15,20 @@ public class MessageController {
     private UserService userService;
 
     @GetMapping("/Message/{email}")
-    public String Chatting(@PathVariable("email") String email, Model model) {
+    public String Messaging(@PathVariable("email") String email, Model model) {
         if(userService.getOneByEmail(email)==null)
             throw  new ResponseStatusException(HttpStatus.NOT_FOUND);
         model.addAttribute("user_sendTo", email);
-        return "Message/MessageOne";
+        return "/Message/messageOne";
     }
 
     @GetMapping("/Message")
-    public String Chatting() {
+    public String Messaging() {
         return "Message/message";
+    }
+
+    @GetMapping("/Message/Stranger")
+    public String StrangerMessaging() {
+        return "/Message/messageRandom";
     }
 }
