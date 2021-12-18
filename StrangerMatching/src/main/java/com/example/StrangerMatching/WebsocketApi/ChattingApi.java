@@ -69,12 +69,10 @@ public class ChattingApi {
 
         if (userSHA != null) {
             UserEntity currentUser = (UserEntity) userSHA.getSessionAttributes().get(WebSocketCommon.USER_ENTITY_KEY_IN_ONLINE_LIST);
-            if(!tryMatching(currentUser)){
-                UserMatchingStorage.getInstance().getUsersWaitingToChatMatching().add(userSHA);
-                UserEntity tmp = new UserEntity();
-                tmp.setAvatar(new AvatarEntity());
-                tmp.setGender(new GenderEntity());
-                tmp.setGenderPreference(new GenderEntity());
+            if (!tryMatching(currentUser)) {
+                if (!UserMatchingStorage.getInstance().getUsersWaitingToChatMatching().contains(userSHA)) {
+                    UserMatchingStorage.getInstance().getUsersWaitingToChatMatching().add(userSHA);
+                }
             }
         }
         simpMessagingTemplate.convertAndSend(WebSocketCommon.TOTAL_WAITING_STRANGER_MATCHING_URL, UserMatchingStorage.getInstance().getUsersWaitingToChatMatching().size());
@@ -86,18 +84,18 @@ public class ChattingApi {
         simpMessagingTemplate.convertAndSend(WebSocketCommon.TOTAL_WAITING_STRANGER_MATCHING_URL, UserMatchingStorage.getInstance().getUsersWaitingToChatMatching().size());
     }
 
-    private boolean tryMatching(UserEntity currentUser){
+    private boolean tryMatching(UserEntity currentUser) {
         // sau khi nhận yêu cầu gép đôi thì kiểm tra trong danh sách những người đang chờ gép đôi xem có ai phù hợp không
         // nếu có thì ghép đôi với người đó luôn, nếu không thì thêm user này vào danh sách chờ ghép đôi
-        for (SimpMessageHeaderAccessor item:UserMatchingStorage.getInstance().getUsersWaitingToChatMatching()) {
+        for (SimpMessageHeaderAccessor item : UserMatchingStorage.getInstance().getUsersWaitingToChatMatching()) {
             UserEntity item_user = (UserEntity) item.getSessionAttributes().get(WebSocketCommon.USER_ENTITY_KEY_IN_ONLINE_LIST);
-            if(item_user.getGender().getId() == currentUser.getGenderPreference().getId()
+            if (item_user.getGender().getId() == currentUser.getGenderPreference().getId()
                     && item_user.getAge() >= currentUser.getAgePreferenceFrom()
                     && item_user.getAge() <= currentUser.getAgePreferenceTo()
                     && currentUser.getGender().getId() == item_user.getGenderPreference().getId()
                     && currentUser.getAge() >= item_user.getAgePreferenceFrom()
                     && currentUser.getAge() <= item_user.getAgePreferenceTo()
-            ){
+            ) {
                 simpMessagingTemplate.convertAndSend(WebSocketCommon.STRANGER_MATCHING_URL + currentUser.getEmail(), UserParser.ToDTO(item_user));
                 simpMessagingTemplate.convertAndSend(WebSocketCommon.STRANGER_MATCHING_URL + item_user.getEmail(), UserParser.ToDTO(currentUser));
                 UserMatchingStorage.getInstance().getUsersWaitingToChatMatching().remove(item);

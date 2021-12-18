@@ -395,7 +395,7 @@ function loadListPosts() {
                             <div class="col-4"></div>
                             <div class="col-8 row">
                                 <div class="col-5">
-                                    <a href="" class="text-decoration-none post-like">
+                                    <a ${item.reactions.find(re=>re.user.email == currentUser.email)!= null ? 'href=""' : ""} class="text-decoration-none post-like">
                                         <i class="fa fa-thumbs-up" aria-hidden="true"></i>
                                         <span> <small>${item.totalReaction > 0 ? item.totalReaction : "Thích"}</small></span>
                                     </a>
@@ -443,7 +443,6 @@ function getUserInfo(email) {
         async: false
     }).done(res => {
         currentUser = JSON.parse(JSON.stringify(res))
-        console.log(currentUser)
         $("#user-info-name").html(currentUser.name)
         $("#user-info-avatar").attr("src", currentUser.avatar.path)
     }).fail(err => {

@@ -37,7 +37,7 @@ function connect(email) {
 
         $("#form-send-message").submit(e => {
             e.preventDefault()
-            if(userRandom){
+            if(userRandom.email != null){
                 let data = $(e.target).serializeFormJSON()
                 data.sendFrom = currentUser
                 data.sendTo = userRandom
@@ -45,7 +45,7 @@ function connect(email) {
                 $(e.target)[0].reset()
             }else{
                 Swal.fire({
-                    icon: 'success',
+                    icon: 'error',
                     title: 'Please waiting to matching!',
                     showConfirmButton: true,
                 })

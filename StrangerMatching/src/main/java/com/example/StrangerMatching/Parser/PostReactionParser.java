@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PostReactionParser {
     public static PostReactionDTO ToDTO(PostReactionEntity postReaction){
-        return new PostReactionDTO(postReaction.getId(),postReaction.getReaction());
+        return new PostReactionDTO(postReaction.getId(),postReaction.getReaction(), postReaction.getUser());
     }
 
     public static List<PostReactionDTO> ToListDTO(List<PostReactionEntity> postReactions){

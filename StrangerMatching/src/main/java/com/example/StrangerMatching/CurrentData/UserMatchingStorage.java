@@ -65,7 +65,7 @@ public class UserMatchingStorage {
 
         for (SimpMessageHeaderAccessor user : usersWaitingToChatMatching) {
             if (user.getSessionId().equals(sessionId)) {
-                usersOnlineSHA.remove(user);
+                usersWaitingToChatMatching.remove(user);
                 break;
             }
         }
