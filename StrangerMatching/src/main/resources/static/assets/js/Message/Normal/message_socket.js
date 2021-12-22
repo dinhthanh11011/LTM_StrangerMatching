@@ -9,10 +9,14 @@ function connect(email) {
         //nhận danh sách các user online
         stompClient.subscribe("/topic/Online", function (response) {
             var userOnlines = JSON.parse(response.body)
+            listAllUsers.forEach(item => {
+                item.isOnline = false
+            })
             userOnlines.forEach(item => {
                 listAllUsers.find(us => us.email == item.email).isOnline = true
             })
             loadListUser(listAllUsers)
+            loadUserChatWithInfo(userSelected)
         });
 
         stompClient.subscribe("/topic/Messages/" + email, function (response) {

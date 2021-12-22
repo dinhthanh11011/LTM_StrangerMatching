@@ -24,5 +24,7 @@ function loadCurrentUserInfo() {
         async:false
     }).done(data => {
         currentUser = JSON.parse(JSON.stringify(data))
+    }).fail(err => {
+        document.location = "/Login"
     })
 }

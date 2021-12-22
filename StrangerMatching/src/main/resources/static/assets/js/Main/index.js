@@ -54,7 +54,7 @@ $(document).ready(() => {
     $(document).on("click", "#btn-open-modal-post-comment", e => {
         e.preventDefault()
         let postId = $(e.currentTarget).closest(".post").attr("data-id")
-        loadPostComment(e,postId)
+        loadPostComment(e, postId)
     })
 
     $(element_SelectionAvatar).change(e => {
@@ -79,7 +79,8 @@ $(document).ready(() => {
 })
 
 function logout(e) {
-    alert("logout chua lam :))")
+    localStorage.removeItem("email")
+    document.location = "/Login"
 }
 
 function postComment(e, postId) {
@@ -94,7 +95,7 @@ function postComment(e, postId) {
         data: JSON.stringify(data),
         contentType: "application/json"
     }).done(res => {
-        loadPostComment(e,postId)
+        loadPostComment(e, postId)
         $(e.target)[0].reset()
     }).fail(err => {
         Swal.fire({
@@ -105,7 +106,7 @@ function postComment(e, postId) {
     })
 }
 
-function loadPostComment(e,postId) {
+function loadPostComment(e, postId) {
     postSelectedId = postId
     $.ajax({
         url: postUrl + "Comment/" + postId,
@@ -137,7 +138,9 @@ function loadPostComment(e,postId) {
             })
             $(postCommentErea).scrollTop($(postCommentErea)[0].scrollHeight);
         } else {
-            $(postCommentErea).append(`Bài viết chưa có bình luận nào!`)
+            $(postCommentErea).append(`
+                <div>Bài viết chưa có bình luận nào!</div>
+            `)
         }
 
     }).fail(err => {
@@ -395,7 +398,8 @@ function loadListPosts() {
                             <div class="col-4"></div>
                             <div class="col-8 row">
                                 <div class="col-5">
-                                    <a ${item.reactions.find(re=>re.user.email == currentUser.email)!= null ? 'href=""' : ""} class="text-decoration-none post-like">
+<!--                                    <a style="text-overline-color: #4e73df" ${item.reactions.find(re => re.user.email == currentUser.email) != null ? 'href=""' : ""} class="text-decoration-none post-like">-->
+                                    <a  href="" style="${item.reactions.find(re => re.user.email == currentUser.email) != null ? "" : "color: #3a3b45"}" class="text-decoration-none post-like">
                                         <i class="fa fa-thumbs-up" aria-hidden="true"></i>
                                         <span> <small>${item.totalReaction > 0 ? item.totalReaction : "Thích"}</small></span>
                                     </a>
@@ -446,11 +450,7 @@ function getUserInfo(email) {
         $("#user-info-name").html(currentUser.name)
         $("#user-info-avatar").attr("src", currentUser.avatar.path)
     }).fail(err => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.responseText,
-        })
+        document.location = "/Login"
     })
 }
 

@@ -41,7 +41,7 @@ function connect(email) {
 
 function loadListAnnounMessages(elementTotal,elementList, data) {
     $(elementTotal).html(data.length)
-
+    $(elementTotal).removeClass("d-none")
     $(`${elementList} a`).remove()
     data.forEach(item => {
         let html = `

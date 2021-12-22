@@ -34,8 +34,11 @@ public class UserApi {
 
 
     @GetMapping("/Info")
-    public UserDTO getUserLoginInfo(@RequestParam String email) {
-        return UserParser.ToDTO(userService.getOneByEmail(email));
+    public ResponseEntity getUserLoginInfo(@RequestParam String email) {
+        UserEntity user = userService.getOneByEmail(email);
+        if (user == null)
+            return ResponseEntity.status(404).body("Not found");
+        return ResponseEntity.status(200).body(UserParser.ToDTO(user));
     }
 
     @PostMapping("/Register")

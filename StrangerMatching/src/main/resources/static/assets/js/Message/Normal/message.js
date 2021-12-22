@@ -15,24 +15,24 @@ $(document).ready(() => {
     connect(currentUser.email)
     if (listAllUsers.length > 0) {
         userSelected = listAllUsers[0]
-        loadMessages(element_chatBlock,currentUser.email,userSelected.email)
+        loadMessages(element_chatBlock, currentUser.email, userSelected.email)
         loadUserChatWithInfo(userSelected)
     }
 
-    $(document).on("click",".user-list-item",e=>{
+    $(document).on("click", ".user-list-item", e => {
         e.preventDefault()
         let userEmail = $(e.currentTarget).attr("data-id")
         selectionUser(userEmail)
     })
 
-    $("#txt-search-user").on("input",e=>{
+    $("#txt-search-user").on("input", e => {
         searchUser($(e.target).val())
     })
 })
 
-function searchUser(searchKey){
+function searchUser(searchKey) {
     searchKey = searchKey.toLowerCase()
-    loadListUser(listAllUsers.filter(item=>
+    loadListUser(listAllUsers.filter(item =>
         item.name.toLowerCase().includes(searchKey)
         || item.email.toLowerCase().includes(searchKey)
         || item.gender.name.toLowerCase().includes(searchKey))
@@ -40,9 +40,9 @@ function searchUser(searchKey){
     )
 }
 
-function selectionUser(userEmail){
-    userSelected = listAllUsers.find(item=>item.email == userEmail)
-    loadMessages(element_chatBlock,currentUser.email,userSelected.email)
+function selectionUser(userEmail) {
+    userSelected = listAllUsers.find(item => item.email == userEmail)
+    loadMessages(element_chatBlock, currentUser.email, userSelected.email)
     loadUserChatWithInfo(userSelected)
 }
 
@@ -88,13 +88,14 @@ function loadListUser(listUsers) {
 }
 
 function getUserLoginInfo() {
-    console.log("load user")
     $.ajax({
         url: userURL + "/Info?email=" + localStorage.getItem("email"),
         method: "GET",
         async: false
     }).done(data => {
         currentUser = JSON.parse(JSON.stringify(data))
+    }).fail(err => {
+        document.location = "/Login"
     })
 }
 

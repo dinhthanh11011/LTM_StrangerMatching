@@ -6,8 +6,8 @@ let currentUser = {}
 var user_sendTo = {}
 
 $(document).ready(() => {
-    loadUserSendToInfo()
     loadCurrentUserInfo()
+    loadUserSendToInfo()
     loadMessages(element_chatBlock,currentUser.email,user_sendTo.email)
     connect(currentUser.email)
 })
@@ -31,6 +31,8 @@ function loadCurrentUserInfo() {
         async:false
     }).done(data => {
         currentUser = JSON.parse(JSON.stringify(data))
+    }).fail(err => {
+        document.location = "/Login"
     })
 }
 
