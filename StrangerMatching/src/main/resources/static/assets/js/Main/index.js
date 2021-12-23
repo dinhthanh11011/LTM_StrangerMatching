@@ -1,26 +1,26 @@
-let prefixUrl = "/api/"
-let avatarUrl = prefixUrl + "Avatar"
-let genderUrl = prefixUrl + "Gender"
+var prefixUrl = "/api/"
+var avatarUrl = prefixUrl + "Avatar"
+var genderUrl = prefixUrl + "Gender"
 
-let postUrl = prefixUrl + "Post/"
-let userUrl = prefixUrl + "User/"
+var userUrl = prefixUrl + "User/"
 
-let currentUser = {}
+var currentUser = {}
 
-let reactionList = []
-let avatars = []
-let genders = []
+var avatars = []
+var genders = []
 
-let postSelectedId = ""
+var postSelectedId = ""
 
 
-let element_FormUpdateUserInfo = "#form-update-user-info"
-let element_SelectionAvatar = `${element_FormUpdateUserInfo} select[name="avatar"]`
+var element_FormUpdateUserInfo = "#form-update-user-info"
+var element_SelectionAvatar = `${element_FormUpdateUserInfo} select[name="avatar"]`
+var element_PostBlock = "#post-list"
+
 
 $(document).ready(() => {
     getUserInfo(localStorage.getItem("email"))
-    getListReaction()
-    loadListPosts()
+
+    loadListPosts(element_PostBlock)
     getGenders()
     getAvatars()
 
@@ -28,7 +28,9 @@ $(document).ready(() => {
 
     $("#form-create-post").submit(e => {
         e.preventDefault()
-        createPost(e)
+        let data = new FormData($(e.target)[0])
+        data.append("user.email", currentUser.email)
+        createPost(e,data,element_PostBlock)
     })
 
     $("#form-change-password").submit(e => {
@@ -41,20 +43,24 @@ $(document).ready(() => {
         updateUserInfo(e)
     })
 
-    $(document).on("click", ".post-delete", e => {
+    $(document).on("click", ".post-like",  e => {
         e.preventDefault()
-        deletePost(e)
+        let data = {
+            post: {
+                id: $(e.currentTarget).closest(".post").attr("data-id")
+            },
+            user: {
+                email: localStorage.getItem("email")
+            },
+            reaction: reactionList[0]
+        }
+        likePost(data,element_PostBlock)
     })
 
-    $(document).on("click", ".post-like", e => {
+    $(document).on("click", "#btn-open-post-comment", e => {
         e.preventDefault()
-        likePost(e)
-    })
-
-    $(document).on("click", "#btn-open-modal-post-comment", e => {
-        e.preventDefault()
-        let postId = $(e.currentTarget).closest(".post").attr("data-id")
-        loadPostComment(e, postId)
+        postSelectedId = $(e.currentTarget).closest(".post").attr("data-id")
+        loadPostComment(postSelectedId,"#post-comment-area")
     })
 
     $(element_SelectionAvatar).change(e => {
@@ -73,12 +79,22 @@ $(document).ready(() => {
 
     $("#btn-open-user-profile").click(e => {
         e.preventDefault()
-        document.location = "/User/Profile/"+currentUser.email
+        document.location = "/User/Profile/" + currentUser.email
     })
 
     $("#form-post-comment").submit(e => {
         e.preventDefault()
-        postComment(e, postSelectedId)
+        let data = $(e.target).serializeFormJSON()
+        data.post = {id: postSelectedId}
+        data.user = currentUser
+        postComment(e, data,"#post-comment-area")
+    })
+
+
+    $(document).on("click",".post-settings-menu-delete",e=>{
+        e.preventDefault()
+        let dataId = $(e.target).closest(".post").attr("data-id")
+        deletePost(dataId, element_PostBlock)
     })
 
 })
@@ -88,74 +104,7 @@ function logout(e) {
     document.location = "/Login"
 }
 
-function postComment(e, postId) {
-    let data = $(e.target).serializeFormJSON()
-    data.post = {
-        id: postId
-    }
-    data.user = currentUser
-    $.ajax({
-        url: postUrl + "Comment",
-        method: "POST",
-        data: JSON.stringify(data),
-        contentType: "application/json"
-    }).done(res => {
-        loadPostComment(e, postId)
-        $(e.target)[0].reset()
-    }).fail(err => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.responseText,
-        })
-    })
-}
 
-function loadPostComment(e, postId) {
-    postSelectedId = postId
-    $.ajax({
-        url: postUrl + "Comment/" + postId,
-        method: "GET"
-    }).done(res => {
-        let postCommentErea = "#post-comment-area"
-        $(`${postCommentErea} div`).remove()
-        if (res.length > 0) {
-            res.forEach(item => {
-                let html = `
-                    <div class="m-2">
-                        <a class="dropdown-item d-flex align-items-center" href="/Message/${item.user.email}">
-                            <div class="dropdown-list-image me-3"><img width="50px" height="50px" class="rounded-circle"
-                                                                        style="object-fit: cover"
-                                                                       src="${item.user.avatar.path}">
-                                <div class="bg-success status-indicator"></div>
-                            </div>
-                            <div class="fw-bold">
-                                <div class="text-truncate"><span>${item.user.name}</span> <span
-                                        class="small text-gray-700 ml-2">${item.user.gender.name} - ${item.user.age}</span></div>
-                                <p class="small text-gray-500 my-1">${new Date(item.createdDate).toLocaleString()}</p>
-                                <p class="small text-gray-800 mb-0">${item.text}</p>
-                            </div>
-                        </a>
-                        <hr class="sidebar-divider my-1">
-                    </div>
-                `
-                $(postCommentErea).append(html)
-            })
-            $(postCommentErea).scrollTop($(postCommentErea)[0].scrollHeight);
-        } else {
-            $(postCommentErea).append(`
-                <div>Bài viết chưa có bình luận nào!</div>
-            `)
-        }
-
-    }).fail(err => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.responseText,
-        })
-    })
-}
 
 function changePassword(e) {
     Swal.fire({
@@ -255,187 +204,6 @@ function loadUserInfoToUpdateModal(e) {
 }
 
 
-function likePost(e) {
-    e.preventDefault()
-    let data = {
-        post: {
-            id: $(e.currentTarget).closest(".post").attr("data-id")
-        },
-        user: {
-            email: localStorage.getItem("email")
-        },
-        reaction: reactionList[0]
-    }
-    $.ajax({
-        url: postUrl + "Reaction",
-        method: "POST",
-        data: JSON.stringify(data),
-        contentType: "application/json"
-    }).done(res => {
-        Swal.fire({
-            icon: 'success',
-            title: res,
-            showConfirmButton: false,
-            timer: 800
-        })
-        loadListPosts()
-    }).fail(err => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.responseText,
-        })
-    })
-}
-
-function deletePost(e) {
-    Swal.fire({
-        title: 'Do you want to delete this post?',
-        showCancelButton: true,
-        confirmButtonText: 'delete',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            let postId = $(e.currentTarget).closest(".post").attr("data-id")
-            $.ajax({
-                url: postUrl + postId,
-                method: "DELETE"
-            }).done(res => {
-                Swal.fire({
-                    icon: 'success',
-                    title: res,
-                    showConfirmButton: false,
-                    timer: 800
-                })
-                loadListPosts()
-            }).fail(err => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: err.responseText,
-                })
-            })
-        }
-    })
-}
-
-function createPost(formEvent) {
-    Swal.fire({
-        title: 'Do you want to create a post?',
-        showCancelButton: true,
-        confirmButtonText: 'create',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            let formData = new FormData($(formEvent.target)[0])
-            if (formData.get("cation") != "" || formData.get("files").size > 0) {
-                formData.append("user.email", localStorage.getItem("email"))
-                $.ajax({
-                    url: postUrl,
-                    method: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false
-                }).done(res => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: res,
-                        showConfirmButton: false,
-                        timer: 800
-                    })
-                    $("#modal-create-new-post").modal("hide")
-                    loadListPosts()
-                }).fail(err => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: err.responseText,
-                    })
-                })
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'You need a caption or some images',
-                })
-            }
-        }
-    })
-}
-
-
-function loadListPosts() {
-    $.ajax({
-        url: postUrl,
-        method: "GET"
-    }).done(data => {
-        $("#post-list div").remove()
-        data.forEach(item => {
-            let html = `
-                <div data-id="${item.id}" class="post my-2 p-2 rounded bg-gray-100">
-                    <div class="post-header my-1">
-                        <a class="dropdown-item d-flex align-items-center" href="/Message/${item.user.email}">
-                            <div class="dropdown-list-image me-3"><img width="50px" height="50px" class="rounded-circle"
-                                    style="object-fit: cover"
-                                    src="${item.user.avatar.path}">
-                                <div class="bg-success status-indicator"></div>
-                            </div>
-                            <div class="fw-bold">
-                                <div class="text-truncate"><span>${item.user.name}</span></div>
-                                <p class="small text-black-50 mb-0">${new Date(item.createdDate).toLocaleString()}</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="post-body mx-3">
-                        <div class="post-body-text text-black">
-                            ${item.caption}
-                        </div>
-                        <div class="post-body-img flex-row flex-wrap my-2 p-2">
-                            <div class="row justify-content-center">`
-            item.images.forEach(img => {
-                html += `<img style="width: 45%;" class="img-fluid m-1"
-                                    src="${img.path}">`
-            })
-
-            html += `</div>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="post-footer">
-                        <div class="row my-2">
-                            <div class="col-4"></div>
-                            <div class="col-8 row">
-                                <div class="col-5">
-                                    <a  href="" style="${item.reactions.find(re => re.user.email == currentUser.email) != null ? "color: #ff0076" : "color: #3a3b45"}" class="text-decoration-none post-like">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                          <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-                                        </svg>
-                                        <span> <small>${item.totalReaction > 0 ? item.totalReaction : ""}</small></span>
-                                    </a>
-                                </div>
-                                <div class="col-5">
-                                    <a class="text-decoration-none " id="btn-open-modal-post-comment" data-bs-toggle="modal"
-                                   data-bs-target="#modal-post-comment" href="">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-text-fill" viewBox="0 0 16 16">
-                                          <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
-                                        </svg>
-                                    </a>
-                                </div>`
-            if (currentUser.email == item.user.email) {
-                html += ` <div class="col-2">
-                                <a href="" class="post-delete text-decoration-none ">
-                                    <i class="fa fa-trash text-danger" aria-hidden="true"></i>
-                                </a>
-                            </div>`
-            }
-            html += `</div>
-                        </div>
-                    </div>
-                </div>
-            `
-            $("#post-list").append(html)
-        })
-    })
-}
-
 
 function loadPreviewAvatarAfterChoice(e) {
     let avatarSelected = avatars.find(item => item.id == $(e.target).val())
@@ -459,22 +227,6 @@ function getUserInfo(email) {
         $("#user-info-avatar").attr("src", currentUser.avatar.path)
     }).fail(err => {
         document.location = "/Login"
-    })
-}
-
-
-function getListReaction() {
-    $.ajax({
-        url: "/api/Reaction",
-        method: "GET",
-    }).done(res => {
-        reactionList = JSON.parse(JSON.stringify(res))
-    }).fail(err => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: "Error when load reaction",
-        })
     })
 }
 

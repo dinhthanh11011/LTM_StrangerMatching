@@ -1,0 +1,75 @@
+
+<!-- Modal create new post-->
+<div class="modal fade" id="modal-create-new-post" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-create-post">
+                    <div class="mb-3">
+                        <textarea name="caption" type="text" class="form-control" rows="3"
+                                  placeholder="Caption ..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Images</label>
+                        <input name="files" type="file" multiple class="form-control-file">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button form="form-create-post" type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end Modal create new post-->
+
+
+<!-- Modal  post comment-->
+<div class="modal fade" id="modal-post-comment" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Comments</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="post-comment-area" style="max-height: 50vh;overflow-y: auto; overflow-x: hidden">
+                    <div class="d-none m-2">
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="dropdown-list-image me-3"><img width="50px" class="rounded-circle"
+                                                                       src="/assets/img/avatars/avatar4.jpeg">
+                                <div class="bg-success status-indicator"></div>
+                            </div>
+                            <div class="fw-bold">
+                                <div class="text-truncate"><span>Đinh Tuấn Thành</span> <span
+                                        class="small text-gray-700 ml-2">Nam - 19</span></div>
+                                <p class="small text-gray-500 mb-0">Hello asdfnkasjn lasknflask nmlaskjmfdlk asmdf</p>
+                            </div>
+                        </a>
+                        <hr class="sidebar-divider my-1">
+                    </div>
+
+                </div>
+                <form class="mt-4" id="form-post-comment">
+                    <div class="form-group">
+                        <textarea required rows="2" name="text" type="text" class="form-control"
+                                  placeholder="comment ..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button form="form-post-comment" type="submit" class="btn btn-primary">Comment</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end Modal  post comment-->
+

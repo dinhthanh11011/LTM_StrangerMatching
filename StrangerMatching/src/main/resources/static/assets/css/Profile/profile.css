@@ -268,9 +268,11 @@ body{
 	transition: max-height 0.3s;
 	margin-top: 10px;
 }
-.settings-menu-height{
-	max-height: 150px;
-}
+
+/*.settings-menu-height{*/
+/*	max-height: 150px;*/
+/*}*/
+
 .post-button{
 	border-radius: 5px;
 	padding: 5px;
@@ -286,3 +288,4 @@ body{
 .post-button:hover{
 	background: #238df7;
 }
+
