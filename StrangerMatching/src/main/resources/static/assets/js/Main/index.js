@@ -71,6 +71,11 @@ $(document).ready(() => {
         logout(e)
     })
 
+    $("#btn-open-user-profile").click(e => {
+        e.preventDefault()
+        document.location = "/User/Profile/"+currentUser.email
+    })
+
     $("#form-post-comment").submit(e => {
         e.preventDefault()
         postComment(e, postSelectedId)
@@ -236,6 +241,7 @@ function updateUserInfo(e) {
 function loadUserInfoToUpdateModal(e) {
     $(`${element_FormUpdateUserInfo} input[name="name"]`).val(currentUser.name)
     $(`${element_FormUpdateUserInfo} input[name="age"]`).val(currentUser.age)
+    $(`${element_FormUpdateUserInfo} textarea[name="story"]`).val(currentUser.story)
 
     loadSelection(`${element_FormUpdateUserInfo} select[name="gender"]`, genders, "id", "name", `Gender selection ...`, currentUser.gender.id)
     loadSelection(element_SelectionAvatar, avatars, "id", "displayName", `Avatar selection ...`, currentUser.avatar.id)
@@ -398,25 +404,27 @@ function loadListPosts() {
                             <div class="col-4"></div>
                             <div class="col-8 row">
                                 <div class="col-5">
-<!--                                    <a style="text-overline-color: #4e73df" ${item.reactions.find(re => re.user.email == currentUser.email) != null ? 'href=""' : ""} class="text-decoration-none post-like">-->
-                                    <a  href="" style="${item.reactions.find(re => re.user.email == currentUser.email) != null ? "" : "color: #3a3b45"}" class="text-decoration-none post-like">
-                                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-                                        <span> <small>${item.totalReaction > 0 ? item.totalReaction : "Thích"}</small></span>
+                                    <a  href="" style="${item.reactions.find(re => re.user.email == currentUser.email) != null ? "color: #ff0076" : "color: #3a3b45"}" class="text-decoration-none post-like">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                          <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                        </svg>
+                                        <span> <small>${item.totalReaction > 0 ? item.totalReaction : ""}</small></span>
                                     </a>
                                 </div>
                                 <div class="col-5">
                                     <a class="text-decoration-none " id="btn-open-modal-post-comment" data-bs-toggle="modal"
                                    data-bs-target="#modal-post-comment" href="">
-                                        <i class="fa fa-comments" aria-hidden="true"></i><span>
-                                            Bình luận</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-text-fill" viewBox="0 0 16 16">
+                                          <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
+                                        </svg>
                                     </a>
                                 </div>`
             if (currentUser.email == item.user.email) {
                 html += ` <div class="col-2">
-                                    <a href="" class="post-delete text-decoration-none ">
-                                        <i class="fa fa-trash text-danger" aria-hidden="true"></i>
-                                    </a>
-                                </div>`
+                                <a href="" class="post-delete text-decoration-none ">
+                                    <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                                </a>
+                            </div>`
             }
             html += `</div>
                         </div>
@@ -431,7 +439,7 @@ function loadListPosts() {
 
 function loadPreviewAvatarAfterChoice(e) {
     let avatarSelected = avatars.find(item => item.id == $(e.target).val())
-    let src = "assets/img/dogs/image2.jpeg"
+    let src = "/assets/img/dogs/image2.jpeg"
     if (avatarSelected) {
         src = avatarSelected.path
     }

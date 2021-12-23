@@ -72,6 +72,7 @@ function loadListUser(listUsers) {
                 <div class="d-flex bd-highlight">
                     <div class="img_cont">
                         <img src="${item.avatar.path}"
+                            style="object-fit: cover"
                              class="rounded-circle user_img">
                         <span class="online_icon ${item.isOnline ? "" : "offline"}"></span>
                     </div>
