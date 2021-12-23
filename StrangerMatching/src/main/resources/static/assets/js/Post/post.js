@@ -1,11 +1,58 @@
 var prefixUrl = "/api/"
 var postUrl = prefixUrl + "Post/"
 
+var postSelectedId = ""
 
 var reactionList = []
 
 $(document).ready(() => {
     getListReaction()
+    loadListPosts(element_PostBlock)
+
+    // post
+    //=========================================================
+    $("#form-create-post").submit(e => {
+        e.preventDefault()
+        let data = new FormData($(e.target)[0])
+        data.append("user.email", currentUser.email)
+        createPost(e, data, element_PostBlock)
+    })
+
+    $(document).on("click", ".post-like", e => {
+        e.preventDefault()
+        let data = {
+            post: {
+                id: $(e.currentTarget).closest(".post").attr("data-id")
+            },
+            user: {
+                email: localStorage.getItem("email")
+            },
+            reaction: reactionList[0]
+        }
+        likePost(data, element_PostBlock)
+    })
+
+    $(document).on("click", "#btn-open-post-comment", e => {
+        e.preventDefault()
+        postSelectedId = $(e.currentTarget).closest(".post").attr("data-id")
+        loadPostComment(postSelectedId, "#post-comment-area")
+    })
+
+    $("#form-post-comment").submit(e => {
+        e.preventDefault()
+        let data = $(e.target).serializeFormJSON()
+        data.post = {id: postSelectedId}
+        data.user = currentUser
+        postComment(e, data, "#post-comment-area")
+    })
+
+
+    $(document).on("click", ".post-settings-menu-delete", e => {
+        e.preventDefault()
+        let dataId = $(e.target).closest(".post").attr("data-id")
+        deletePost(dataId, element_PostBlock)
+    })
+
 
     $(document).on("click", ".post-item-option", e => {
         e.preventDefault()
