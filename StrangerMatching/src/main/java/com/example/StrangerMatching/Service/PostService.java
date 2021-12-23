@@ -32,6 +32,10 @@ public class PostService {
         return iPostRepository.findAllByOrderByCreatedDateDesc();
     }
 
+    public List<PostEntity> getAllByEmail(String email) {
+        return iPostRepository.findByUser_EmailOrderByCreatedDateDesc(email);
+    }
+
     public PostEntity getOneById(Long postId) {
         return iPostRepository.getById(postId);
     }

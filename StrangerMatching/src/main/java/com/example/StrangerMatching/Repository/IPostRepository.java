@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface IPostRepository extends JpaRepository<PostEntity, Long> {
     public List<PostEntity> findAllByOrderByCreatedDateDesc();
+    public List<PostEntity> findByUser_EmailOrderByCreatedDateDesc(String email);
+
 }

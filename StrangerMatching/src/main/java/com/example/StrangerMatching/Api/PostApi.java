@@ -14,6 +14,7 @@ import com.example.StrangerMatching.Service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,9 +27,13 @@ public class PostApi {
     private PostService postService;
 
     @GetMapping()
-    public List<PostDTO> getAll() {
-        return PostParser.ToListDTO(postService.getAll());
+    public List<PostDTO> getAll(@Nullable @RequestParam("email") String email) {
+        if (email == null)
+            return PostParser.ToListDTO(postService.getAll());
+        else
+            return PostParser.ToListDTO(postService.getAllByEmail(email));
     }
+
 
     @PostMapping(value = "")
     public ResponseEntity postOne(@ModelAttribute PostWithFilesDTO post) {
@@ -53,8 +58,8 @@ public class PostApi {
     // React post
     //=================================================================================
     @PostMapping("/Reaction")
-    public ResponseEntity reactionPost(@RequestBody PostReactionEntity postReaction){
-        if(postService.reactionPost(postReaction)==null)
+    public ResponseEntity reactionPost(@RequestBody PostReactionEntity postReaction) {
+        if (postService.reactionPost(postReaction) == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
 
         return ResponseEntity.status(200).body(BaseResponsibilityMessage.UpdatingSuccessfully);
@@ -63,15 +68,15 @@ public class PostApi {
     // comment post
     //=================================================================================
     @PostMapping("/Comment")
-    public ResponseEntity commentPost(@RequestBody PostCommentEntity comment){
-        if(postService.commentPost(comment)==null)
+    public ResponseEntity commentPost(@RequestBody PostCommentEntity comment) {
+        if (postService.commentPost(comment) == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
 
         return ResponseEntity.status(200).body(BaseResponsibilityMessage.UpdatingSuccessfully);
     }
 
     @GetMapping("/Comment/{postId}")
-    public List<PostCommentDTO> getAllCommentPost(@PathVariable("postId") Long postId){
+    public List<PostCommentDTO> getAllCommentPost(@PathVariable("postId") Long postId) {
         return PostCommentParser.ToListDTO(postService.getAllPostComment(postId));
     }
 

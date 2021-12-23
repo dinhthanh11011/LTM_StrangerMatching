@@ -152,7 +152,7 @@ body{
 .add-post-links div{
 	display: flex;
 }
-.add-post-links a{
+.add-post-links label{
 	text-decoration: none;
 	display: flex;
 	align-items: center;
@@ -160,7 +160,12 @@ body{
 	margin-right: 30px;
 	font-size: 13px;
 }
-.add-post-links a img{
+
+.add-post-links label:hover{
+	cursor: pointer;
+}
+
+.add-post-links label img{
 	width: 20px;
 	margin-right: 10px;
 }
@@ -237,6 +242,7 @@ body{
 	padding-right: 10px;
 	cursor: pointer;
 }
+
 .profile-menu div:hover{
 	width: 150px;
 	display: flex;

@@ -1,13 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Profile</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/Profile/profile.css">
-    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+<!--    <script src="https://kit.fontawesome.com/a81368914c.js"></script>-->
+
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
 </head>
 <body>
 <input hidden id="userProfileEmail" th:value="${email}">
@@ -24,33 +47,42 @@
             </div>
         </div>
         <div class="pd-right">
-            <div class="d-none addnew">
-                <i class="fas fa-plus-circle style-icon"></i>
-                <button type="button" class="add-button">Thêm vào tin</button>
+            <div class="addnew pl-3 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-medical" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v.634l.549-.317a.5.5 0 1 1 .5.866L9 6l.549.317a.5.5 0 1 1-.5.866L8.5 6.866V7.5a.5.5 0 0 1-1 0v-.634l-.549.317a.5.5 0 1 1-.5-.866L7 6l-.549-.317a.5.5 0 0 1 .5-.866l.549.317V4.5A.5.5 0 0 1 8 4zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"></path>
+                    <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"></path>
+                    <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"></path>
+                </svg>
+                <button type="button" class="add-button" data-bs-toggle="modal"
+                        data-bs-target="#modal-create-new-post" >Post</button>
             </div>
-            <div id="area-open-modal-update-user-info" class="update-profile">
-                <i class="fas fa-pen style-icon"></i>
+            <div id="area-open-modal-update-user-info" class="update-profile pl-3 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                    <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"></path>
+                </svg>
+                <!-- mở modal chỉnh sửa thông tin user -->
                 <button  id="btn-open-modal-update-user-info"
                          data-bs-toggle="modal"
-                         data-bs-target="#modal-update-user-info" type="button" class="update-button">Chỉnh sửa thông tin cá nhân</button>
+                         data-bs-target="#modal-update-user-info" type="button" class="update-button">Information</button>
             </div>
         </div>
     </div>
     <div class="profile-info">
         <div class="info-col"></div>
         <div class="post-col">
-            <div class="write-post-container">
+            <div id="area-create-post" class="d-none write-post-container">
                 <div class="user-profile">
-                    <img src="/assets/img/images/profile-pic.png">
+                    <img id="user-profile-avatar2" src="/assets/img/images/profile-pic.png" height="50px" width="50px" style="object-fit: cover">
                     <div>
-                        <a href="" class="profile-name"><p>Nguyễn Duy Kha</p></a>
+                        <a id="user-profile-name2" class="profile-name"><p>Nguyễn Duy Kha</p></a>
                     </div>
                 </div>
                 <div class="post-input-container">
                     <textarea rows="3" placeholder="Bạn đang nghĩ gì?"></textarea>
                     <div class="add-post-links">
                         <div>
-                            <a href="#"><img src="/assets/img/images/photo.png">Ảnh</a>
+                            <label for="post-imgs"><img src="/assets/img/images/photo.png">Ảnh</label>
+                            <input hidden name="imag" id="post-imgs" type="file">
                         </div>
                         <div>
                             <button class="post-button">Đăng bài</button>
@@ -58,160 +90,19 @@
                     </div>
                 </div>
             </div>
-            <div class="post-container">
-                <div class="post-row">
-                    <div class="user-profile">
-                        <img src="/assets/img/images/profile-pic.png">
-                        <div>
-                            <a href="#" class="profile-name"><p>Nguyễn Duy Kha</p></a>
-                            <span>20 tháng 12 lúc 14:15</span>
-                        </div>
-                    </div>
-                    <div>
-                        <a onclick="settingsMenuToggle(this)">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                            </svg>
-                        </a>
-                        <div class="settings-menu">
-                            <div class="profile-menu">
-                                <div>
-                                    <p>Xóa bài viết</p>
-                                    <i class="far fa-trash-alt"></i>
-                                </div>
-                                <div>
-                                    <p>Trang cá nhân</p>
-                                    <i class="far fa-paper-plane"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <!-- danh sách bài post -->
+            <div class="col" id="post-list">
 
-                </div>
-                <p class="post-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione eos voluptatibus
-                    ullam totam sint. Tenetur cumque ex harum ipsum. Doloremque dicta nulla
-                    adipisci corrupti maiores molestias eius nemo id nisi!</p>
-                <img src="/assets/img/images/feed-image-1.png" class="post-img">
-                <div class="post-row">
-                    <div class="activity-icons">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-                            </svg>
-                            <span><small>120</small></span>
-                        </div>
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-chat-left-text-fill" viewBox="0 0 16 16">
-                                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
-
-
-
-<!-- Modal update user info-->
-<div class="modal fade" id="modal-update-user-info" tabindex="-1" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">User Info</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="form-update-user-info">
-                    <div class="row mb-3">
-                        <div class="col-sm-6 mb-3 mb-sm-0">
-                            <label class="form-label">Full name</label>
-                            <input required class="form-control "
-                                   type="text" name="name">
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="form-label">Age</label>
-                            <input required class="form-control " type="number"
-                                   min="1" name="age">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Gender</label>
-                            <select required class="form-control " name="gender">
-                                <option value="">Nam</option>
-                                <option value="">Nữ</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <div class="row">
-                                <div class="col-9">
-                                    <label class="form-label">Avatar</label>
-                                    <select required class="form-control " name="avatar">
-                                        <option value="">Avatar 1</option>
-                                        <option value="">Avatar 2</option>
-                                    </select>
-                                </div>
-                                <div class="col-3">
-                                    <img id="avatar-preview" class="border rounded-circle img-profile"
-                                         style="object-fit: cover"
-                                         src="" width="65px" height="65px">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-12 mb-6 mb-sm-3">
-                            <label class="form-label">Story</label>
-                            <textarea class="form-control "
-                                      rows="2" name="story"></textarea>
-                        </div>
-                    </div>
-                    <h4 class="my-3">Matching info</h4>
-                    <div class="row mb-3">
-                        <div class="col-4">
-                            <label class="form-label">Gender matching</label>
-                            <select required class="form-control " name="genderPreference">
-                                <option value="">Nam</option>
-                                <option value="">Nữ</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="form-label">Age matching from</label>
-                            <input required class="form-control " type="number"
-                                   min="1" name="agePreferenceFrom">
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="form-label">Age matching to</label>
-                            <input required class="form-control " type="number"
-                                   min="1" name="agePreferenceTo">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button form="form-update-user-info" type="submit" class="btn btn-primary">Update</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- end Modal update user info-->
-
-
-
-
-
-
-
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div th:insert="BaseTemplateItem/post.html"></div>
+<div th:insert="BaseTemplateItem/userInfo.html"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
@@ -221,8 +112,10 @@
         crossorigin="anonymous"></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="/assets/js/form_data_to_json.js"></script>
-<script src="/assets/js/Profile/profile.js"></script>
+<script src="/assets/js/form_data_to_json.js?v=@DateTime.UtcNow.ToString()"></script>
+<script src="/assets/js/Post/post.js?v=@DateTime.UtcNow.ToString()"></script>
+<script src="/assets/js/user/user.js?v=@DateTime.UtcNow.ToString()"></script>
+<script src="/assets/js/Profile/profile.js?v=@DateTime.UtcNow.ToString()"></script>
 
 
 <script>

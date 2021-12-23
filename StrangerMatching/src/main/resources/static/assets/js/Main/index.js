@@ -15,6 +15,7 @@ $(document).ready(() => {
 
     connect(currentUser.email)
 
+    loadAllListPosts(element_PostBlock,false)
 
     $("#btn-logout").click(e => {
         e.preventDefault()

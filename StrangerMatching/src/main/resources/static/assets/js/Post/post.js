@@ -1,13 +1,13 @@
 var prefixUrl = "/api/"
-var postUrl = prefixUrl + "Post/"
+var postUrl = prefixUrl + "Post"
 
 var postSelectedId = ""
-
 var reactionList = []
+
+let userPostEmail = false
 
 $(document).ready(() => {
     getListReaction()
-    loadListPosts(element_PostBlock)
 
     // post
     //=========================================================
@@ -76,6 +76,35 @@ $(document).ready(() => {
         document.location = "/User/Profile/" + dataUserEmail
     })
 
+    // load image preview
+    $(`#form-create-post input[name="files"]`).change((e) => {
+        let files = e.target.files;
+
+        if (files && files.length > 0) {
+            // Set preview image
+            let loadArea = $(e.target).closest("div").find("#area-img-preview")
+            let reader = new FileReader();
+            $(loadArea).children().remove()
+
+            function readFile(index) {
+                if (index >= files.length) {
+                    return;
+                }
+
+                reader.onload = function () {
+                    // get file content
+                    $(loadArea).append(`<img width="30%" class="img-fluid m-2"
+                                 src="${reader.result}">`)
+                    // do sth with bin
+                    readFile(index + 1)
+                }
+                reader.readAsDataURL(files[index]);
+            }
+            readFile(0)
+        }
+    });
+
+
 })
 
 
@@ -101,7 +130,7 @@ function createPost(e, postData, reloadIntoElement) {
                     })
                     $("#modal-create-new-post").modal("hide")
                     $(e.target)[0].reset()
-                    loadListPosts(reloadIntoElement)
+                    loadAllListPosts(reloadIntoElement, userPostEmail)
                 }).fail(err => {
                     Swal.fire({
                         icon: 'error',
@@ -122,12 +151,12 @@ function createPost(e, postData, reloadIntoElement) {
 
 function likePost(postData, reloadIntoElement) {
     $.ajax({
-        url: postUrl + "Reaction",
+        url: postUrl + "/Reaction",
         method: "POST",
         data: JSON.stringify(postData),
         contentType: "application/json"
     }).done(res => {
-        loadListPosts(reloadIntoElement)
+        loadAllListPosts(reloadIntoElement, userPostEmail)
     }).fail(err => {
         Swal.fire({
             icon: 'error',
@@ -146,7 +175,7 @@ function deletePost(postId, reloadIntoElement) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: postUrl + postId,
+                url: postUrl + "/" + postId,
                 method: "DELETE"
             }).done(res => {
                 Swal.fire({
@@ -154,7 +183,7 @@ function deletePost(postId, reloadIntoElement) {
                     showConfirmButton: false,
                     timer: 500
                 })
-                loadListPosts(reloadIntoElement)
+                loadAllListPosts(reloadIntoElement, userPostEmail)
             }).fail(err => {
                 Swal.fire({
                     icon: 'error',
@@ -166,9 +195,9 @@ function deletePost(postId, reloadIntoElement) {
     })
 }
 
-function loadListPosts(loadIntoElement) {
+function loadAllListPosts(loadIntoElement, email) {
     $.ajax({
-        url: postUrl,
+        url: postUrl + `${email != false ? "?email=" + email : ""}`,
         method: "GET"
     }).done(data => {
         $(`${loadIntoElement} div`).remove()
@@ -195,18 +224,26 @@ function loadListPosts(loadIntoElement) {
             if (item.user.email == currentUser.email) {
                 html += `
                                         <div class="post-settings-menu-delete">
-                                            <p>Xóa bài viết</p>
-                                            <i class="far fa-trash-alt"></i>
+                                            <span>Xóa bài viết</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                              <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                            </svg>
                                         </div>
                                     `
             }
             html += `<div class="post-settings-menu-profile">
-                                        <p>Trang cá nhân</p>
-                                        <i class="far fa-paper-plane"></i>
+                                        <span>Trang cá nhân</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-video2" viewBox="0 0 16 16">
+                                          <path d="M10 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+                                          <path d="M2 1a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2ZM1 3a1 1 0 0 1 1-1h2v2H1V3Zm4 10V2h9a1 1 0 0 1 1 1v9c0 .285-.12.543-.31.725C14.15 11.494 12.822 10 10 10c-3.037 0-4.345 1.73-4.798 3H5Zm-4-2h3v2H2a1 1 0 0 1-1-1v-1Zm3-1H1V8h3v2Zm0-3H1V5h3v2Z"/>
+                                        </svg>
                                     </div>
                                     <div class="post-settings-menu-message">
-                                        <p>Chat</p>
-                                        <i class="far fa-paper-plane"></i>
+                                        <span>Chat</span>
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-quote" viewBox="0 0 16 16">
+                                          <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+                                          <path d="M7.066 6.76A1.665 1.665 0 0 0 4 7.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 0 0 .6.58c1.486-1.54 1.293-3.214.682-4.112zm4 0A1.665 1.665 0 0 0 8 7.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 0 0 .6.58c1.486-1.54 1.293-3.214.682-4.112z"/>
+                                        </svg>
                                     </div>
                                 </div>
                             </div>
@@ -214,10 +251,10 @@ function loadListPosts(loadIntoElement) {
 
                     </div>
                     <p class="post-text">${item.caption}</p>
-                    <div class="row justify-content-center" style="max-height: 100vh; overflow-y: auto; overflow-x: hidden;">`
+                    <div class="row justify-content-center" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden;">`
 
             item.images.forEach(img => {
-                html += `<img class="img-fluid m-1"
+                html += `<img class="img-fluid m-1" style="width: fit-content;height: fit-content"
                                     src="${img.path}">`
             })
 
@@ -255,7 +292,7 @@ function loadListPosts(loadIntoElement) {
 //======================================================================
 function postComment(e, postCommentData, reloadPostCommentIntoElement) {
     $.ajax({
-        url: postUrl + "Comment",
+        url: postUrl + "/Comment",
         method: "POST",
         data: JSON.stringify(postCommentData),
         contentType: "application/json"
@@ -274,7 +311,7 @@ function postComment(e, postCommentData, reloadPostCommentIntoElement) {
 
 function loadPostComment(postId, loadPostCommentIntoElement) {
     $.ajax({
-        url: postUrl + "Comment/" + postId,
+        url: postUrl + "/Comment/" + postId,
         method: "GET"
     }).done(res => {
         $(`${loadPostCommentIntoElement} div`).remove()
