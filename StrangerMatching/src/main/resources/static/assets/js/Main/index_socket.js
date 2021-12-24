@@ -71,7 +71,7 @@ function loadUserOnlineList(elementTotal, elementList, data) {
         let html =
             `
             <li class="nav-item">
-                <a class="dropdown-item d-flex align-items-center" href="/Message/${item.email}">
+                <a class="dropdown-item d-flex align-items-center" href="/User/Profile/${item.email}">
                     <div class="dropdown-list-image me-3"><img width="50px" height="50px" class="rounded-circle"
                             style="object-fit: cover"
                             src="${item.avatar.path}">
@@ -79,7 +79,7 @@ function loadUserOnlineList(elementTotal, elementList, data) {
                     </div>
                     <div class="fw-bold">
                         <div class="text-truncate"><span>${item.name}</span><span class="small text-gray-800 ml-2">${item.gender.name} - ${item.age}</span></div>
-                        <p class="small text-gray-800 mb-0">${item.story ? item.story : "..."}</p>
+                        <div class="small text-gray-800 mb-0" style="white-space: normal">${item.story ? item.story : "..."}</div>
                     </div>
                 </a>
                 <hr class="sidebar-divider my-1">

@@ -29,7 +29,7 @@ $(document).ready(() => {
 
 function loadPreviewAvatarAfterChoice(e){
     let avatarSelected = avatars.find(item => item.id == $(e.target).val())
-    let src = "assets//assets/img/dogs/image2.jpeg"
+    let src = "/assets/img/dogs/image2.jpeg"
     if(avatarSelected){
         src =avatarSelected.path
     }

@@ -78,7 +78,7 @@ function loadListUser(listUsers) {
                     </div>
                     <div class="user_info">
                         <span>${item.name}</span>
-                        <p>${item.story}</p>
+                        <div  style="white-space: normal">${item.story}</div>
                     </div>
                 </div>
             </a>

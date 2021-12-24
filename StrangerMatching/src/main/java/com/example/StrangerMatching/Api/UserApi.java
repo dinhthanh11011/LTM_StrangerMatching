@@ -58,12 +58,12 @@ public class UserApi {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
         }
 
-//        String AccountActiveLink = FunctionSupport.getSiteURL(request) + "/api/User/Register/Confirm/" + token;
-//        emailSendingService.sendSimpleEmail(user.getEmail(),
-//                "<p>Click to the link to active your account:</p> <a href=" + AccountActiveLink +
-//                        ">Active</a><p>Sorry about this inconvenience</p>",
-//                ""
-//        );
+        String AccountActiveLink = FunctionSupport.getSiteURL(request) + "/api/User/Register/Confirm/" + token;
+        emailSendingService.sendSimpleEmail(user.getEmail(),
+                "<p>Click to the link to active your account:</p> <a href=" + AccountActiveLink +
+                        ">Active</a><p>Sorry about this inconvenience</p>",
+                ""
+        );
         return ResponseEntity.status(200).body(BaseResponsibilityMessage.CheckYourMailbox);
     }
 
@@ -87,8 +87,8 @@ public class UserApi {
         if (!userEntity.getPassword().equals(FunctionSupport.getMD5(user.getPassword())))
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(BaseResponsibilityMessage.InformationIsNotCorrect);
 
-//        if (!userEntity.isEmailConfirm())
-//            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(BaseResponsibilityMessage.CheckYourMailToConfirmAccountBeforeLogin);
+        if (!userEntity.isEmailConfirm())
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(BaseResponsibilityMessage.CheckYourMailToConfirmAccountBeforeLogin);
 
         return ResponseEntity.status(200).body(new TokenDTO("acasfsdg", user.getEmail()));
     }

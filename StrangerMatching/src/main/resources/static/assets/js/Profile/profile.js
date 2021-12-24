@@ -14,11 +14,11 @@ $(document).ready(() => {
     if(userProfile.email == currentUser.email){
         userProfile = currentUser
         $("#area-open-modal-update-user-info").removeClass("d-none")
-        // $("#area-create-post").removeClass("d-none")
+        $("#area-open-modal-post").removeClass("d-none")
     }else{
         userProfile = getUserInfo(userProfile.email)
         $("#area-open-modal-update-user-info").addClass("d-none")
-        // $("#area-create-post").addClass("d-none")
+        $("#area-open-modal-post").addClass("d-none")
     }
 
     if (userProfile != null && userProfile.email != null) {
@@ -34,7 +34,7 @@ $(document).ready(() => {
         logout(e)
     })
 
-    $("#btn-open-modal-update-user-info").click(e => {
+    $("#area-open-modal-update-user-info").click(e => {
         e.preventDefault()
         loadUserInfoToUpdateModal(currentUser)
     })
@@ -42,6 +42,11 @@ $(document).ready(() => {
     $("#btn-open-user-profile").click(e => {
         e.preventDefault()
         document.location = "/User/Profile/" + currentUser.email
+    })
+
+    $("#area-goto-chat").click(e => {
+        e.preventDefault()
+        document.location = "/Message/" + userProfile.email
     })
 
 
