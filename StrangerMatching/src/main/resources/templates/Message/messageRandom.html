@@ -13,6 +13,30 @@
     <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
     <link rel="stylesheet" href="/assets/css/Message/message.css">
+
+    <!-- loader -->
+    <style>
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+        }
+
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 
 <body>
@@ -67,6 +91,24 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Modal waiting for matching-->
+    <div class="modal fade" id="modal-loader" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content m-auto" style="background: unset; width: fit-content;">
+                <div class="modal-body" style="width: fit-content">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end Modal waiting for matching-->
+
+
+
+
     <script>
         $(document).ready(function () {
             $("#action_menu_btn").click(function () {

@@ -68,7 +68,7 @@ function loadListUser(listUsers) {
     listUsers.forEach(item => {
         let html = `
          <li>
-             <a data-id="${item.email}" href="" class="user-list-item">
+             <a data-id="${item.email}" href="" class="user-list-item" style="color: #3b3e41">
                 <div class="d-flex bd-highlight">
                     <div class="img_cont">
                         <img src="${item.avatar.path}"
@@ -78,7 +78,7 @@ function loadListUser(listUsers) {
                     </div>
                     <div class="user_info">
                         <span>${item.name}</span>
-                        <div  style="white-space: normal">${item.story}</div>
+                        <div  style="white-space: normal;" >${item.story}</div>
                     </div>
                 </div>
             </a>

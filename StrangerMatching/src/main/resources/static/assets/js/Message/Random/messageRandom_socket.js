@@ -17,6 +17,7 @@ function connect(email) {
             userRandom = JSON.parse(response.body)
             setUserMatchingInfo(userRandom)
             loadMessages(element_chatBlock, currentUser.email, userRandom.email)
+            $("#modal-loader").modal("hide")
             Swal.fire({
                 icon: 'success',
                 title: 'Ghép đôi thành công!',

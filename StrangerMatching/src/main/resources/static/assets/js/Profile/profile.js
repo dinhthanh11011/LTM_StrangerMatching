@@ -11,6 +11,8 @@ $(document).ready(() => {
 
     currentUser = getUserInfo(localStorage.getItem("email"))
 
+    connect(currentUser.email)
+
     if(userProfile.email == currentUser.email){
         userProfile = currentUser
         $("#area-open-modal-update-user-info").removeClass("d-none")

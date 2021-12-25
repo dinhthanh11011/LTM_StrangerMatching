@@ -64,7 +64,7 @@ public class ChattingApi {
 
     // yêu cầu gép đôi
     @MessageMapping("/Matching")
-    public void StrangerMatching(@Payload String email) {
+    synchronized public void StrangerMatching(@Payload String email) {
         SimpMessageHeaderAccessor userSHA = UserMatchingStorage.getInstance().getUserOnlineByEmail(email);
 
         if (userSHA != null) {

@@ -7,6 +7,7 @@ let currentUser = {}
 let userRandom = {}
 
 $(document).ready(() => {
+    $("#modal-loader").modal("show")
     loadCurrentUserInfo()
     connect(currentUser.email)
 })

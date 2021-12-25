@@ -18,7 +18,14 @@ function connect(email) {
 
         // đăng kí nhận thông báo số người đang chờ ghép đôi
         stompClient.subscribe("/topic/TotalWaitingMatching" , function (response) {
-            $("#txt-total-waiting-matching").html(response.body)
+            console.log(response.body != 0)
+            if(response.body != 0){
+                $("#txt-total-waiting-matching").removeClass("d-none")
+                $("#txt-total-waiting-matching").html(response.body)
+            }else{
+                $("#txt-total-waiting-matching").addClass("d-none")
+            }
+
         });
 
         stompClient.subscribe("/topic/Messages/" + email, function (response) {
