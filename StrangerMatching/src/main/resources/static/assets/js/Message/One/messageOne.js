@@ -10,6 +10,10 @@ $(document).ready(() => {
     loadUserSendToInfo()
     loadMessages(element_chatBlock,currentUser.email,user_sendTo.email)
     connect(currentUser.email)
+
+    $("#btn-goto-profile").click(e => {
+        document.location = "/User/Profile/"+user_sendTo.email;
+    })
 })
 
 function loadUserSendToInfo() {

@@ -28,6 +28,12 @@ $(document).ready(() => {
     $("#txt-search-user").on("input", e => {
         searchUser($(e.target).val())
     })
+
+    $("#btn-goto-profile").click(e => {
+        document.location = "/User/Profile/"+userSelected.email;
+    })
+
+
 })
 
 function searchUser(searchKey) {
@@ -78,7 +84,7 @@ function loadListUser(listUsers) {
                     </div>
                     <div class="user_info">
                         <span>${item.name}</span>
-                        <div  style="white-space: normal;" >${item.story}</div>
+                        <div class="text-white" style="white-space: normal;" >${item.story}</div>
                     </div>
                 </div>
             </a>

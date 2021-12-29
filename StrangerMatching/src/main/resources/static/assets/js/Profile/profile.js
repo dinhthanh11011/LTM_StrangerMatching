@@ -51,6 +51,11 @@ $(document).ready(() => {
         document.location = "/Message/" + userProfile.email
     })
 
+    $("#area-goto-home").click(e => {
+        e.preventDefault()
+        document.location = "/"
+    })
+
 
 })
 
