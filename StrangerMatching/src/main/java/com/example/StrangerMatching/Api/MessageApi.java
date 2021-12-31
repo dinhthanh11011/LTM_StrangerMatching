@@ -1,5 +1,6 @@
 package com.example.StrangerMatching.Api;
 
+import com.example.StrangerMatching.Common.FunctionSupport;
 import com.example.StrangerMatching.DTO.MessageDTO;
 import com.example.StrangerMatching.Parser.MessageParser;
 import com.example.StrangerMatching.Service.MessageService;
@@ -18,7 +19,8 @@ public class MessageApi {
     private MessageService messageService;
 
     @GetMapping("")
-    public List<MessageDTO> getChat(@RequestParam("emailOne") String emailOne,@RequestParam("emailTwo") String emailTwo){
-        return MessageParser.ToListDTO(messageService.getAllMessageByTwoUserEmail(emailOne,emailTwo));
+    public List<MessageDTO> getChat(@RequestParam("userEmailChatWith") String userEmailChatWith){
+        String emailOne = FunctionSupport.getCurrentUserEmail();
+        return MessageParser.ToListDTO(messageService.getAllMessageByTwoUserEmail(emailOne, userEmailChatWith));
     }
 }

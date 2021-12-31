@@ -10,8 +10,8 @@ var currentUser = {}
 var userSelected = {}
 
 $(document).ready(() => {
-    getUserLoginInfo()
-    getAllUser()
+    currentUser = getUserInfo("")
+    listAllUsers = getAllUser()
     connect(currentUser.email)
     if (listAllUsers.length > 0) {
         userSelected = listAllUsers[0]
@@ -30,7 +30,7 @@ $(document).ready(() => {
     })
 
     $("#btn-goto-profile").click(e => {
-        document.location = "/User/Profile/"+userSelected.email;
+        document.location = "/User/Profile/" + userSelected.email;
     })
 
 
@@ -52,21 +52,6 @@ function selectionUser(userEmail) {
     loadUserChatWithInfo(userSelected)
 }
 
-function getAllUser() {
-    $.ajax({
-        url: userURL,
-        method: "GET",
-        async: false
-    }).done(res => {
-        listAllUsers = JSON.parse(JSON.stringify(res))
-    }).fail(err => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.responseText,
-        })
-    })
-}
 
 function loadListUser(listUsers) {
     let element_UserList = "#user-list"
@@ -84,25 +69,13 @@ function loadListUser(listUsers) {
                     </div>
                     <div class="user_info">
                         <span>${item.name}</span>
-                        <div class="text-white" style="white-space: normal;" >${item.story}</div>
+                        <div class="text-white" style="white-space: normal;" ><small>${item.story != null ? item.story : "..."}</small></div>
                     </div>
                 </div>
             </a>
         </li>
         `
         $(element_UserList).append(html)
-    })
-}
-
-function getUserLoginInfo() {
-    $.ajax({
-        url: userURL + "/Info?email=" + localStorage.getItem("email"),
-        method: "GET",
-        async: false
-    }).done(data => {
-        currentUser = JSON.parse(JSON.stringify(data))
-    }).fail(err => {
-        document.location = "/Login"
     })
 }
 

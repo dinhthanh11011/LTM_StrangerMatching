@@ -134,6 +134,7 @@ function createPost(e, postData, reloadIntoElement) {
                     $("#modal-create-new-post").modal("hide")
                     $(e.target)[0].reset()
                     loadAllListPosts(reloadIntoElement, userPostEmail)
+                    $("#area-img-preview img").remove()
                 }).fail(err => {
                     Swal.fire({
                         icon: 'error',

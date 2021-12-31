@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -38,7 +39,13 @@ public class UserApi {
 
     @GetMapping()
     public List<UserDTO> getAll() {
-        return UserParser.ToListDTO(userService.getAll());
+        List<UserEntity> userEntities = new ArrayList<>();
+        for (UserEntity userEntity : userService.getAll()) {
+            if (userEntity.isEmailConfirm()) {
+                userEntities.add(userEntity);
+            }
+        }
+        return UserParser.ToListDTO(userEntities);
     }
 
 

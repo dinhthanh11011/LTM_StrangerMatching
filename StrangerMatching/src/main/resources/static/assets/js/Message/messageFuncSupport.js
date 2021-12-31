@@ -1,7 +1,10 @@
 function loadMessages(element_chatBlock, currentUserEmail, userChatWithEmail) {
     $.ajax({
-        url: "/api/Message?emailOne=" + currentUserEmail + "&emailTwo=" + userChatWithEmail,
-        method: "GET"
+        url: "/api/Message?userEmailChatWith=" + userChatWithEmail,
+        method: "GET",
+        headers:{
+            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        },
     }).done(data => {
         $(`${element_chatBlock} div`).remove()
         data.forEach(item => {

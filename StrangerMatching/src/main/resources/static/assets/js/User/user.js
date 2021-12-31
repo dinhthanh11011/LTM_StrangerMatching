@@ -165,6 +165,17 @@ function getUserInfo(email) {
     })).responseJSON
 }
 
+function getAllUser() {
+    return ($.ajax({
+        url: userURL,
+        method: "GET",
+        async: false,
+        headers:{
+            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        },
+    })).responseJSON
+}
+
 function getGenders() {
     $.ajax({
         url: genderUrl,

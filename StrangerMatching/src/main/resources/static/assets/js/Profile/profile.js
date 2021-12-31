@@ -9,7 +9,7 @@ var element_PostBlock = "#post-list"
 $(document).ready(() => {
     userProfile.email = $("#userProfileEmail").val()
 
-    currentUser = getUserInfo(localStorage.getItem("email"))
+    currentUser = getUserInfo("")
 
     connect(currentUser.email)
 
