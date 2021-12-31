@@ -5,7 +5,7 @@ var currentUser = {}
 var element_PostBlock = "#post-list"
 
 $(document).ready(() => {
-    currentUser = getUserInfo(localStorage.getItem("email"))
+    currentUser = getUserInfo("")
     if (currentUser != null && currentUser.email != null) {
         $("#user-info-name").html(currentUser.name)
         $("#user-info-avatar").attr("src", currentUser.avatar.path)

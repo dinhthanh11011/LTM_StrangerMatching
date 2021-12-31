@@ -9,7 +9,7 @@ $(document).ready(() => {
             data: JSON.stringify($(e.target).serializeFormJSON()),
             contentType: "application/json",
         }).done(res => {
-            localStorage.setItem("email", res.email)
+            localStorage.setItem("token", res.token)
             document.location = "/"
         }).fail(err => {
             Swal.fire({

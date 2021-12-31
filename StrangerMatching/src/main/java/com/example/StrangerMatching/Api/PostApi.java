@@ -1,22 +1,22 @@
 package com.example.StrangerMatching.Api;
 
 import com.example.StrangerMatching.Common.BaseResponsibilityMessage;
+import com.example.StrangerMatching.Common.FunctionSupport;
 import com.example.StrangerMatching.DTO.PostCommentDTO;
 import com.example.StrangerMatching.DTO.PostDTO;
 import com.example.StrangerMatching.DTO.PostWithFilesDTO;
 import com.example.StrangerMatching.Entity.PostCommentEntity;
 import com.example.StrangerMatching.Entity.PostEntity;
 import com.example.StrangerMatching.Entity.PostReactionEntity;
+import com.example.StrangerMatching.Entity.UserEntity;
 import com.example.StrangerMatching.Parser.PostCommentParser;
 import com.example.StrangerMatching.Parser.PostParser;
-import com.example.StrangerMatching.Repository.IPostReactionRepository;
 import com.example.StrangerMatching.Service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class PostApi {
     public ResponseEntity postOne(@ModelAttribute PostWithFilesDTO post) {
         PostEntity nPost = new PostEntity();
         nPost.setCaption(post.getCaption());
-        nPost.setUser(post.getUser());
+        nPost.setUser(new UserEntity(FunctionSupport.getCurrentUserEmail()));
         if (postService.createOne(nPost, post.getFiles()) == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
 
@@ -48,6 +48,14 @@ public class PostApi {
 
     @DeleteMapping("/{postId}")
     public ResponseEntity deleteOne(@PathVariable("postId") Long postId) {
+        String email = FunctionSupport.getCurrentUserEmail();
+        PostEntity currentPost = postService.getOneById(postId);
+        if(currentPost==null)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.NotFound);
+
+        if(!currentPost.getUser().getEmail().equals(email))
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.YouAreNotAllow);
+
         if (postService.deleteOne(postId) == false)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
 
@@ -59,6 +67,7 @@ public class PostApi {
     //=================================================================================
     @PostMapping("/Reaction")
     public ResponseEntity reactionPost(@RequestBody PostReactionEntity postReaction) {
+        postReaction.setUser(new UserEntity(FunctionSupport.getCurrentUserEmail()));
         if (postService.reactionPost(postReaction) == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
 
@@ -69,6 +78,7 @@ public class PostApi {
     //=================================================================================
     @PostMapping("/Comment")
     public ResponseEntity commentPost(@RequestBody PostCommentEntity comment) {
+        comment.setUser(new UserEntity(FunctionSupport.getCurrentUserEmail()));
         if (postService.commentPost(comment) == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
 

@@ -1,5 +1,8 @@
 package com.example.StrangerMatching.Common;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.servlet.http.HttpServletRequest;
 import java.security.MessageDigest;
 import java.text.Normalizer;
@@ -48,4 +51,10 @@ public class FunctionSupport {
         return siteURL.replace(request.getServletPath(),"");
     }
 
+    public static String getCurrentUserEmail(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        String email = userDetails.getUsername();
+        return email;
+    }
 }

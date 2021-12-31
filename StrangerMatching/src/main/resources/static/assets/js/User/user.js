@@ -66,10 +66,13 @@ function updateUserInfo(e) {
                 id: data.avatar
             }
             $.ajax({
-                url: userUrl + "Information/" + currentUser.email,
+                url: userUrl + "Information",
                 method: "PUT",
                 data: JSON.stringify(data),
-                contentType: "application/json"
+                contentType: "application/json",
+                headers:{
+                    "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+                },
             }).done(res => {
                 Swal.fire({
                     icon: 'success',
@@ -100,10 +103,13 @@ function changePassword(e) {
             let data = $(e.target).serializeFormJSON()
             if (data.newPassword == data.newPasswordConfirm) {
                 $.ajax({
-                    url: userUrl + "ChangePassword/" + currentUser.email,
+                    url: userUrl + "ChangePassword",
                     method: "PUT",
                     data: JSON.stringify(data),
-                    contentType: "application/json"
+                    contentType: "application/json",
+                    headers:{
+                        "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+                    },
                 }).done(res => {
                     Swal.fire({
                         icon: 'success',
@@ -150,16 +156,22 @@ function loadUserInfoToUpdateModal( currentUser) {
 //=======================================================================
 function getUserInfo(email) {
     return ($.ajax({
-        url: userUrl + "Info?email=" + email,
+        url: userUrl + "Information?email=" + email,
         method: "GET",
-        async: false
+        async: false,
+        headers:{
+            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        },
     })).responseJSON
 }
 
 function getGenders() {
     $.ajax({
         url: genderUrl,
-        method: "GET"
+        method: "GET",
+        headers:{
+            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        },
     }).done(data => {
         genders = JSON.parse(JSON.stringify(data))
     })
@@ -168,7 +180,10 @@ function getGenders() {
 function getAvatars() {
     $.ajax({
         url: avatarUrl,
-        method: "GET"
+        method: "GET",
+        headers:{
+            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        },
     }).done(data => {
         avatars = JSON.parse(JSON.stringify(data))
     })

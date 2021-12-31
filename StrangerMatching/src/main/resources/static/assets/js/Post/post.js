@@ -121,7 +121,10 @@ function createPost(e, postData, reloadIntoElement) {
                     method: "POST",
                     data: postData,
                     processData: false,
-                    contentType: false
+                    contentType: false,
+                    headers:{
+                        "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+                    },
                 }).done(res => {
                     Swal.fire({
                         icon: 'success',
@@ -154,7 +157,10 @@ function likePost(postData, reloadIntoElement) {
         url: postUrl + "/Reaction",
         method: "POST",
         data: JSON.stringify(postData),
-        contentType: "application/json"
+        contentType: "application/json",
+        headers:{
+            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        },
     }).done(res => {
         loadAllListPosts(reloadIntoElement, userPostEmail)
     }).fail(err => {
@@ -176,7 +182,10 @@ function deletePost(postId, reloadIntoElement) {
         if (result.isConfirmed) {
             $.ajax({
                 url: postUrl + "/" + postId,
-                method: "DELETE"
+                method: "DELETE",
+                headers:{
+                    "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+                },
             }).done(res => {
                 Swal.fire({
                     icon: 'success',
@@ -198,7 +207,10 @@ function deletePost(postId, reloadIntoElement) {
 function loadAllListPosts(loadIntoElement, email) {
     $.ajax({
         url: postUrl + `${email != false ? "?email=" + email : ""}`,
-        method: "GET"
+        method: "GET",
+        headers:{
+            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        },
     }).done(data => {
         $(`${loadIntoElement} div`).remove()
         data.forEach(item => {
@@ -295,7 +307,10 @@ function postComment(e, postCommentData, reloadPostCommentIntoElement) {
         url: postUrl + "/Comment",
         method: "POST",
         data: JSON.stringify(postCommentData),
-        contentType: "application/json"
+        contentType: "application/json",
+        headers:{
+            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        },
     }).done(res => {
         loadPostComment(postCommentData.post.id, reloadPostCommentIntoElement)
         $(e.target)[0].reset()
@@ -312,7 +327,10 @@ function postComment(e, postCommentData, reloadPostCommentIntoElement) {
 function loadPostComment(postId, loadPostCommentIntoElement) {
     $.ajax({
         url: postUrl + "/Comment/" + postId,
-        method: "GET"
+        method: "GET",
+        headers:{
+            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        },
     }).done(res => {
         $(`${loadPostCommentIntoElement} div`).remove()
         if (res.length > 0) {
@@ -359,6 +377,9 @@ function getListReaction() {
     $.ajax({
         url: "/api/Reaction",
         method: "GET",
+        headers:{
+            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        },
     }).done(res => {
         reactionList = JSON.parse(JSON.stringify(res))
     }).fail(err => {

@@ -2,17 +2,20 @@ package com.example.StrangerMatching.Api;
 
 import com.example.StrangerMatching.Common.BaseResponsibilityMessage;
 import com.example.StrangerMatching.Common.FunctionSupport;
+import com.example.StrangerMatching.Configuration.JWT.JwtTokenUtil;
 import com.example.StrangerMatching.DTO.PasswordDTO;
 import com.example.StrangerMatching.DTO.TokenDTO;
 import com.example.StrangerMatching.DTO.UserDTO;
 import com.example.StrangerMatching.Entity.UserEntity;
 import com.example.StrangerMatching.Parser.UserParser;
+import com.example.StrangerMatching.Service.CustomUserDetailsService;
 import com.example.StrangerMatching.Service.MailSending.EmailSendingService;
 import com.example.StrangerMatching.Service.UserService;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +28,12 @@ public class UserApi {
     private UserService userService;
 
     @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
     private EmailSendingService emailSendingService;
 
     @GetMapping()
@@ -33,9 +42,14 @@ public class UserApi {
     }
 
 
-    @GetMapping("/Info")
+    @GetMapping("/Information")
     public ResponseEntity getUserLoginInfo(@RequestParam String email) {
-        UserEntity user = userService.getOneByEmail(email);
+        UserEntity user;
+        if (email.length() > 0)
+            user = userService.getOneByEmail(email);
+        else
+            user = userService.getOneByEmail(FunctionSupport.getCurrentUserEmail());
+
         if (user == null)
             return ResponseEntity.status(404).body("Not found");
         return ResponseEntity.status(200).body(UserParser.ToDTO(user));
@@ -90,11 +104,19 @@ public class UserApi {
         if (!userEntity.isEmailConfirm())
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(BaseResponsibilityMessage.CheckYourMailToConfirmAccountBeforeLogin);
 
-        return ResponseEntity.status(200).body(new TokenDTO("acasfsdg", user.getEmail()));
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEntity.getEmail());
+
+
+        userService.updateInformation(userEntity.getEmail(), userEntity);
+
+        final String token = jwtTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.status(200).body(new TokenDTO(token));
     }
 
-    @PutMapping("/ChangePassword/{email}")
-    public ResponseEntity changePassword(@PathVariable(name = "email") String email, @RequestBody PasswordDTO passwordDTO) {
+    @PutMapping("/ChangePassword")
+    public ResponseEntity changePassword(@RequestBody PasswordDTO passwordDTO) {
+        String email = FunctionSupport.getCurrentUserEmail();
         UserEntity user = userService.getOneByEmail(email);
         if (user == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BaseResponsibilityMessage.NotFound);
@@ -152,8 +174,10 @@ public class UserApi {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
     }
 
-    @PutMapping("/Information/{email}")
-    public ResponseEntity updateInformation(@PathVariable(name = "email") String email, @RequestBody UserEntity newUserInfo) {
+    @PutMapping("/Information")
+    public ResponseEntity updateInformation(@RequestBody UserEntity newUserInfo) {
+        String email = FunctionSupport.getCurrentUserEmail();
+
         if (userService.updateInformation(email, newUserInfo) == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponsibilityMessage.SomethingWentWrong);
 
