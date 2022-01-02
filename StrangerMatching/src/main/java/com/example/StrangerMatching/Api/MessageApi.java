@@ -20,7 +20,7 @@ public class MessageApi {
 
     @GetMapping("")
     public List<MessageDTO> getChat(@RequestParam("userEmailChatWith") String userEmailChatWith){
-        String emailOne = FunctionSupport.getCurrentUserEmail();
-        return MessageParser.ToListDTO(messageService.getAllMessageByTwoUserEmail(emailOne, userEmailChatWith));
+        String currentUserEmail = FunctionSupport.getCurrentUserEmail();
+        return MessageParser.ToListDTO(messageService.getAllMessageByTwoUserEmail(currentUserEmail, userEmailChatWith));
     }
 }

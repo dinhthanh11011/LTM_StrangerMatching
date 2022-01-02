@@ -29,7 +29,7 @@ $(document).ready(() => {
             },
             reaction: reactionList[0]
         }
-        likePost(data, element_PostBlock)
+        likePost(data, e)
     })
 
     $(document).on("click", "#btn-open-post-comment", e => {
@@ -100,6 +100,7 @@ $(document).ready(() => {
                 }
                 reader.readAsDataURL(files[index]);
             }
+
             readFile(0)
         }
     });
@@ -122,8 +123,8 @@ function createPost(e, postData, reloadIntoElement) {
                     data: postData,
                     processData: false,
                     contentType: false,
-                    headers:{
-                        "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+                    headers: {
+                        "Authorization": `JWT_Token ${localStorage.getItem("token")}`
                     },
                 }).done(res => {
                     Swal.fire({
@@ -153,17 +154,36 @@ function createPost(e, postData, reloadIntoElement) {
     })
 }
 
-function likePost(postData, reloadIntoElement) {
+function likePost(postData, e) {
     $.ajax({
         url: postUrl + "/Reaction",
         method: "POST",
         data: JSON.stringify(postData),
         contentType: "application/json",
-        headers:{
-            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        headers: {
+            "Authorization": `JWT_Token ${localStorage.getItem("token")}`
         },
     }).done(res => {
-        loadAllListPosts(reloadIntoElement, userPostEmail)
+        let currentTarget = $(e.currentTarget)
+        let totalReaction = $(e.currentTarget).find("span.total-reaction")
+        let heartColor = "#ff0076"
+        let grayColor = "#3a3b45"
+
+        if (convertRGBToHex(currentTarget.css("color")) == heartColor) {
+            currentTarget.css("color", grayColor)
+            if(totalReaction.html() != "1"){
+            totalReaction.html(Number(totalReaction.html()) - 1)
+            }else{
+                totalReaction.html("")
+            }
+        } else {
+            currentTarget.css("color", heartColor)
+            if(totalReaction.html() != ""){
+                totalReaction.html(Number(totalReaction.html()) + 1)
+            }else{
+                totalReaction.html(1)
+            }
+        }
     }).fail(err => {
         Swal.fire({
             icon: 'error',
@@ -184,8 +204,8 @@ function deletePost(postId, reloadIntoElement) {
             $.ajax({
                 url: postUrl + "/" + postId,
                 method: "DELETE",
-                headers:{
-                    "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+                headers: {
+                    "Authorization": `JWT_Token ${localStorage.getItem("token")}`
                 },
             }).done(res => {
                 Swal.fire({
@@ -209,8 +229,8 @@ function loadAllListPosts(loadIntoElement, email) {
     $.ajax({
         url: postUrl + `${email != false ? "?email=" + email : ""}`,
         method: "GET",
-        headers:{
-            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        headers: {
+            "Authorization": `JWT_Token ${localStorage.getItem("token")}`
         },
     }).done(data => {
         $(`${loadIntoElement} div`).remove()
@@ -280,7 +300,7 @@ function loadAllListPosts(loadIntoElement, email) {
                                 <path fill-rule="evenodd"
                                       d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
                             </svg>
-                            <span>${item.totalReaction > 0 ? item.totalReaction : ""}</span>
+                            <span class="total-reaction" >${item.totalReaction > 0 ? item.totalReaction : ""}</span>
                         </a>
                         <a id="btn-open-post-comment" 
                                 class="text-decoration-none mx-4"
@@ -309,8 +329,8 @@ function postComment(e, postCommentData, reloadPostCommentIntoElement) {
         method: "POST",
         data: JSON.stringify(postCommentData),
         contentType: "application/json",
-        headers:{
-            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        headers: {
+            "Authorization": `JWT_Token ${localStorage.getItem("token")}`
         },
     }).done(res => {
         loadPostComment(postCommentData.post.id, reloadPostCommentIntoElement)
@@ -329,8 +349,8 @@ function loadPostComment(postId, loadPostCommentIntoElement) {
     $.ajax({
         url: postUrl + "/Comment/" + postId,
         method: "GET",
-        headers:{
-            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        headers: {
+            "Authorization": `JWT_Token ${localStorage.getItem("token")}`
         },
     }).done(res => {
         $(`${loadPostCommentIntoElement} div`).remove()
@@ -378,8 +398,8 @@ function getListReaction() {
     $.ajax({
         url: "/api/Reaction",
         method: "GET",
-        headers:{
-            "Authorization":`JWT_Token ${localStorage.getItem("token")}`
+        headers: {
+            "Authorization": `JWT_Token ${localStorage.getItem("token")}`
         },
     }).done(res => {
         reactionList = JSON.parse(JSON.stringify(res))
@@ -390,4 +410,8 @@ function getListReaction() {
             text: "Error when load reaction",
         })
     })
+}
+
+function convertRGBToHex(rgb){
+    return `#${rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).slice(1).map(n => parseInt(n, 10).toString(16).padStart(2, '0')).join('')}`
 }

@@ -1,10 +1,24 @@
 let stompClient;
 
+var flag = false
+
 function connect(email) {
     let socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function () {
+
+        //nhận danh sách các user online
+        stompClient.subscribe("/topic/Online", function (response) {
+            var userOnlines = JSON.parse(response.body)
+            if (!flag) {
+                if (userOnlines.find(item => item.email == email)) {
+                    flag = true
+                    // gửi yêu cầu ghép đôi sau khi đã thực hiện đăng kí online
+                    stompClient.send("/app/Matching", {}, email)
+                }
+            }
+        });
 
         stompClient.subscribe("/topic/Messages/" + email, function (response) {
             // xử lý tin nhắn nhận được từ websocket
@@ -28,23 +42,15 @@ function connect(email) {
         // gửi req lên server để xử lý tình trạng online cũng như nhận lại danh sách user đang online
         stompClient.send("/app/Register", {}, email)
 
-        // gửi yêu cầu match
-        setTimeout(() => {
-            stompClient.send("/app/Matching", {}, email)
-        }, 3000)
-
-        // gửi tin nhắn
-        // stompClient.send("/app/Chat/dinhthanh11011@gmail.com",{},JSON.stringify({text:"hell", sendFrom:{email:"dinhthanh11011@gmail.com"}}))
-
         $("#form-send-message").submit(e => {
             e.preventDefault()
-            if(userRandom.email != null){
+            if (userRandom.email != null) {
                 let data = $(e.target).serializeFormJSON()
                 data.sendFrom = currentUser
                 data.sendTo = userRandom
                 sendMessage(data, element_chatBlock)
                 $(e.target)[0].reset()
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Please waiting to matching!',
