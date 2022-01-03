@@ -12,6 +12,7 @@ var userSelected = {}
 $(document).ready(() => {
     currentUser = getUserInfo("")
     listAllUsers = getAllUser()
+    console.log(listAllUsers)
     connect(currentUser.email)
     if (listAllUsers.length > 0) {
         userSelected = listAllUsers[0]

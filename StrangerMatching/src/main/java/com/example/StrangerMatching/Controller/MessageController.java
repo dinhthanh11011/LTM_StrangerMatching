@@ -11,6 +11,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 public class MessageController {
+
+    private String BaseMessageOneTemplate = "/BaseTemplateItem/messageOne";
+
     @Autowired
     private UserService userService;
 
@@ -19,7 +22,8 @@ public class MessageController {
         if(userService.getOneByEmail(email)==null)
             throw  new ResponseStatusException(HttpStatus.NOT_FOUND);
         model.addAttribute("user_sendTo", email);
-        return "/Message/messageOne";
+        model.addAttribute("pageItem","Message/messageOne.html");
+        return BaseMessageOneTemplate;
     }
 
     @GetMapping("/Message")
@@ -28,7 +32,8 @@ public class MessageController {
     }
 
     @GetMapping("/Message/Stranger")
-    public String StrangerMessaging() {
-        return "/Message/messageRandom";
+    public String StrangerMessaging(Model model) {
+        model.addAttribute("pageItem","Message/messageRandom.html");
+        return BaseMessageOneTemplate;
     }
 }
