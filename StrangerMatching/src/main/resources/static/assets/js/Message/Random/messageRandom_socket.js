@@ -11,12 +11,16 @@ function connect(email) {
         //nhận danh sách các user online
         stompClient.subscribe("/topic/Online", function (response) {
             var userOnlines = JSON.parse(response.body)
+
             if (!flag) {
                 if (userOnlines.find(item => item.email == email)) {
                     flag = true
                     // gửi yêu cầu ghép đôi sau khi đã thực hiện đăng kí online
                     stompClient.send("/app/Matching", {}, email)
                 }
+            }
+            if(userRandom.email != null){
+                loadUserOnlineStatus("#user-online-status", userOnlines.find(item => item.email == userRandom.email) != null ? true : false)
             }
         });
 

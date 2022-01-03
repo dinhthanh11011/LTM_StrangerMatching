@@ -54,3 +54,12 @@ function loadTimeToMatching(minute) {
     }, 1000)
 
 }
+
+
+function loadUserOnlineStatus(element, status) {
+    if (status) {
+        $(element).removeClass("offline")
+    } else {
+        $(element).addClass("offline")
+    }
+}

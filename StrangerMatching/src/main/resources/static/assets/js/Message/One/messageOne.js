@@ -22,8 +22,8 @@ function loadUserSendToInfo() {
 
 function loadUserOnlineStatus(element, status) {
     if (status) {
-        $(element).removeClass("d-none")
+        $(element).removeClass("offline")
     } else {
-        $(element).addClass("d-none")
+        $(element).addClass("offline")
     }
 }
