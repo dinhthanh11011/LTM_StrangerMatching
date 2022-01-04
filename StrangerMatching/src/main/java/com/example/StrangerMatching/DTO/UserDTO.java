@@ -13,6 +13,15 @@ public class UserDTO {
     private int agePreferenceTo;
     private GenderDTO gender;
     private GenderDTO genderPreference;
+    private String peerId;
+
+    public String getPeerId() {
+        return peerId;
+    }
+
+    public void setPeerId(String peerId) {
+        this.peerId = peerId;
+    }
 
     public String getEmail() {
         return email;

@@ -35,8 +35,11 @@ function connect(email) {
             loadListAnnounMessages("#announce-messages-total","#announce-messages-list",announMessages)
         });
 
-        // gửi req lên server để xử lý tình trạng online cũng như nhận lại danh sách user đang online
-        stompClient.send("/app/Register", {}, email)
+        peer.on('open', function (id) {
+            peerId = id
+            // gửi req lên server để xử lý tình trạng online cũng như nhận lại danh sách user đang online
+            stompClient.send("/app/Register", {}, JSON.stringify({email: email, peerId: peerId}))
+        })
 
         stompClient.send("/app/TotalStrangerMatching", {}, null)
 

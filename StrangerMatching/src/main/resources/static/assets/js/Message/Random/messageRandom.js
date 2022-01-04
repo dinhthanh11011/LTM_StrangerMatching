@@ -3,7 +3,7 @@ let element_chatBlock = "#chatting-block"
 let currentUser = {}
 let userRandom = {}
 
-var TimeToMatching = 2 // phút
+var TimeToMatching = 1 // phút
 
 $(document).ready(() => {
     $("#modal-loader").modal("show")
@@ -33,7 +33,10 @@ function setUserMatchingInfo(user) {
 function loadTimeToMatching(minute) {
     minute = minute - 1
     let second = 59
-    setInterval(() => {
+    let interval = window.setInterval(() => {
+        if(userRandom.email!=null){
+            clearInterval(interval);
+        }
         if (second == 0) {
             if(minute == 0){
                 Swal.fire({
@@ -49,10 +52,10 @@ function loadTimeToMatching(minute) {
                 second = 59
             }
         }
+        console.log(`0${minute}:${second}`)
         $("#element-time-to-matching").html(`0${minute}:${second}`)
         second = second - 1
     }, 1000)
-
 }
 
 

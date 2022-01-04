@@ -36,4 +36,9 @@ public class MessageController {
         model.addAttribute("pageItem","Message/messageRandom.html");
         return BaseMessageOneTemplate;
     }
+
+    @GetMapping("/Video/{email}")
+    public String VideoCallingOne() {
+        return "VideoCall/videoCall";
+    }
 }

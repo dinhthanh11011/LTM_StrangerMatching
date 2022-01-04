@@ -32,7 +32,8 @@
                         </div>
                         <div class="video_cam">
                             <!-- video -->
-                            <span>
+                            <span  data-bs-toggle="modal"
+                                   data-bs-target="#modal-video-call">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-camera-video-fill" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd"
@@ -101,6 +102,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
@@ -117,6 +120,8 @@
 <script src="/assets/js/form_data_to_json.js"></script>
 <script src="/assets/js/user/user.js?v=@DateTime.UtcNow.ToString()"></script>
 <script src="/assets/js/Message/messageFuncSupport.js?v=@DateTime.UtcNow.ToString()"></script>
+
+<div th:insert="BaseTemplateItem/videoCallOne.html"></div>
 
 <div th:insert="${pageItem}"></div>
 

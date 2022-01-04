@@ -2,6 +2,7 @@ package com.example.StrangerMatching.WebsocketApi;
 
 import com.example.StrangerMatching.CurrentData.UserMatchingStorage;
 import com.example.StrangerMatching.DTO.UserDTO;
+import com.example.StrangerMatching.DTO.WebSocketRegisterDTO;
 import com.example.StrangerMatching.Entity.AvatarEntity;
 import com.example.StrangerMatching.Entity.GenderEntity;
 import com.example.StrangerMatching.Entity.MessageEntity;
@@ -36,10 +37,11 @@ public class ChattingApi {
 
     @MessageMapping("/Register")
     @SendTo(WebSocketCommon.USER_ONLINE_URL)
-    public List<UserDTO> Register(@Payload String email, SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("email", email);
-        headerAccessor.getSessionAttributes().put(WebSocketCommon.USER_ENTITY_KEY_IN_ONLINE_LIST, userService.getOneByEmail(email));
-        if (UserMatchingStorage.getInstance().getUserOnlineByEmail(email) == null) {
+    public List<UserDTO> Register(@Payload WebSocketRegisterDTO webSocketRegisterDTO, SimpMessageHeaderAccessor headerAccessor) {
+        headerAccessor.getSessionAttributes().put("email", webSocketRegisterDTO.getEmail());
+        headerAccessor.getSessionAttributes().put("peerId", webSocketRegisterDTO.getPeerId());
+        headerAccessor.getSessionAttributes().put(WebSocketCommon.USER_ENTITY_KEY_IN_ONLINE_LIST, userService.getOneByEmail(webSocketRegisterDTO.getEmail()));
+        if (UserMatchingStorage.getInstance().getUserOnlineByEmail(webSocketRegisterDTO.getEmail()) == null) {
             UserMatchingStorage.getInstance().getUsersOnlineSHA().add(headerAccessor);
         }
 

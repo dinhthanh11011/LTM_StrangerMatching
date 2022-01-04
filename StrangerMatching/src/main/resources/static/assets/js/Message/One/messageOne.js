@@ -6,6 +6,7 @@ var user_sendTo = {}
 $(document).ready(() => {
     currentUser = getUserInfo("")
     user_sendTo = getUserInfo($("#user_sendTo").val())
+    userVideoWith = user_sendTo
     loadUserSendToInfo()
     loadMessages(element_chatBlock,currentUser.email,user_sendTo.email)
     connect(currentUser.email)

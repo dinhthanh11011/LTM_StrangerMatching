@@ -22,6 +22,12 @@ function connect(email) {
             if(userRandom.email != null){
                 loadUserOnlineStatus("#user-online-status", userOnlines.find(item => item.email == userRandom.email) != null ? true : false)
             }
+
+            let user_tmp = userOnlines.find(item => item.email == userRandom.email)
+            userRandom.IsOnline = user_tmp != null ? true : false
+            if (userRandom.IsOnline) {
+                userRandom.peerId = user_tmp.peerId
+            }
         });
 
         stompClient.subscribe("/topic/Messages/" + email, function (response) {
@@ -43,8 +49,11 @@ function connect(email) {
             })
         });
 
-        // gửi req lên server để xử lý tình trạng online cũng như nhận lại danh sách user đang online
-        stompClient.send("/app/Register", {}, email)
+        peer.on('open', function (id) {
+            peerId = id
+            // gửi req lên server để xử lý tình trạng online cũng như nhận lại danh sách user đang online
+            stompClient.send("/app/Register", {}, JSON.stringify({email: email, peerId: peerId}))
+        })
 
         $("#form-send-message").submit(e => {
             e.preventDefault()
@@ -52,7 +61,7 @@ function connect(email) {
                 let data = $(e.target).serializeFormJSON()
                 data.sendFrom = currentUser
                 data.sendTo = userRandom
-                sendMessage(data, element_chatBlock)
+                sendMessage(stompClient,data, element_chatBlock)
                 $(e.target)[0].reset()
             } else {
                 Swal.fire({

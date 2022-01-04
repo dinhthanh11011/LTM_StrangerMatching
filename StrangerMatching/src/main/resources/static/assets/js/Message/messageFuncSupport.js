@@ -60,7 +60,7 @@ function receiveMessage(element_chatBlock, message, sendFrom) {
     }
 }
 
-function sendMessage(data, element_chatBlock) {
+function sendMessage(stompClient,data, element_chatBlock) {
     stompClient.send("/app/Message/" + data.sendTo.email, {}, JSON.stringify(data))
     $(element_chatBlock).append(`
          <div class="d-flex justify-content-end mb-4">

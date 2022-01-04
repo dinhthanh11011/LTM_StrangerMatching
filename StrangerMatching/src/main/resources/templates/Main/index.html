@@ -9,6 +9,7 @@
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/Profile/profile.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <style>
         /* width */
@@ -332,12 +333,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <!--    end libs for stomp and sockjs-->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="/assets/js/form_data_to_json.js"></script>
 <script src="/assets/js/Main/index.js?v=@DateTime.UtcNow.ToString()"></script>
-<script src="/assets/js/Post/post.js?v=@DateTime.UtcNow.ToString()"></script>
-<script src="/assets/js/user/user.js?v=@DateTime.UtcNow.ToString()"></script>
 <script src="/assets/js/Main/index_socket.js?v=@DateTime.UtcNow.ToString()"></script>
+
+<div th:insert="BaseTemplateItem/videoCallOne.html"></div>
+
 
 </body>
 

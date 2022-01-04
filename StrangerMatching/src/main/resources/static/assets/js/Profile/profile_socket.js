@@ -25,8 +25,11 @@ function connect(email) {
         //     receiveMessage(element_chatBlock, message, userSelected)
         // });
 
-        // gửi req lên server để xử lý tình trạng online cũng như nhận lại danh sách user đang online
-        stompClient.send("/app/Register", {}, email)
+        peer.on('open', function (id) {
+            peerId = id
+            // gửi req lên server để xử lý tình trạng online cũng như nhận lại danh sách user đang online
+            stompClient.send("/app/Register", {}, JSON.stringify({email: email, peerId: peerId}))
+        })
 
         // gửi tin nhắn
         // stompClient.send("/app/Chat/dinhthanh11011@gmail.com",{},JSON.stringify({text:"hell", sendFrom:{email:"dinhthanh11011@gmail.com"}}))

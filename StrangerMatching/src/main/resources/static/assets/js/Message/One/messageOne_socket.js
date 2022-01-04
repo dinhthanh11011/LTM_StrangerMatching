@@ -10,7 +10,12 @@ function connect(email) {
         //nhận danh sách các user online
         stompClient.subscribe("/topic/Online", function (response) {
             var userOnlines = JSON.parse(response.body)
-            loadUserOnlineStatus("#user-online-status", userOnlines.find(item => item.email == user_sendTo.email) != null ? true : false)
+            let user_tmp = userOnlines.find(item => item.email == user_sendTo.email)
+            user_sendTo.isOnline = user_tmp != null ? true : false
+            if (user_sendTo.isOnline) {
+                user_sendTo.peerId = user_tmp.peerId
+            }
+            loadUserOnlineStatus("#user-online-status", user_sendTo.isOnline)
         });
 
         stompClient.subscribe("/topic/Messages/" + email, function (response) {
@@ -19,8 +24,12 @@ function connect(email) {
             receiveMessage(element_chatBlock, message, user_sendTo)
         });
 
-        // gửi req lên server để xử lý tình trạng online cũng như nhận lại danh sách user đang online
-        stompClient.send("/app/Register", {}, email)
+        peer.on('open', function (id) {
+            peerId = id
+            // gửi req lên server để xử lý tình trạng online cũng như nhận lại danh sách user đang online
+            stompClient.send("/app/Register", {}, JSON.stringify({email: email, peerId: peerId}))
+        })
+
 
         // gửi tin nhắn
         // stompClient.send("/app/Chat/dinhthanh11011@gmail.com",{},JSON.stringify({text:"hell", sendFrom:{email:"dinhthanh11011@gmail.com"}}))
@@ -30,7 +39,7 @@ function connect(email) {
             let data = $(e.target).serializeFormJSON()
             data.sendFrom = currentUser
             data.sendTo = user_sendTo
-            sendMessage(data, element_chatBlock)
+            sendMessage(stompClient, data, element_chatBlock)
             $(e.target)[0].reset()
         })
     });

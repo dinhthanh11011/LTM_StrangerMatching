@@ -42,6 +42,7 @@ public class UserMatchingStorage {
         List<UserDTO> dtos = new ArrayList<>();
         for (SimpMessageHeaderAccessor socket:usersOnlineSHA) {
             UserDTO dto = UserParser.ToDTO((UserEntity)socket.getSessionAttributes().get(WebSocketCommon.USER_ENTITY_KEY_IN_ONLINE_LIST));
+            dto.setPeerId(socket.getSessionAttributes().get("peerId").toString());
             dtos.add(dto);
         }
         return dtos;

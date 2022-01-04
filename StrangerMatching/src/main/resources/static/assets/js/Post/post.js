@@ -164,26 +164,17 @@ function likePost(postData, e) {
             "Authorization": `JWT_Token ${localStorage.getItem("token")}`
         },
     }).done(res => {
-        let currentTarget = $(e.currentTarget)
-        let totalReaction = $(e.currentTarget).find("span.total-reaction")
-        let heartColor = "#ff0076"
-        let grayColor = "#3a3b45"
 
-        if (convertRGBToHex(currentTarget.css("color")) == heartColor) {
-            currentTarget.css("color", grayColor)
-            if(totalReaction.html() != "1"){
-            totalReaction.html(Number(totalReaction.html()) - 1)
-            }else{
-                totalReaction.html("")
-            }
-        } else {
-            currentTarget.css("color", heartColor)
-            if(totalReaction.html() != ""){
-                totalReaction.html(Number(totalReaction.html()) + 1)
-            }else{
-                totalReaction.html(1)
-            }
+        let currentTarget = $(e.target)
+        let postLikeStrClass = ".post-like"
+
+        if (!currentTarget.hasClass(postLikeStrClass.substring(1))) {
+            currentTarget = currentTarget.closest(postLikeStrClass)
+            console.log(currentTarget.hasClass(postLikeStrClass.substring(1)))
+            console.log(currentTarget.css("color"))
         }
+
+        handleAfterLikePost(currentTarget)
     }).fail(err => {
         Swal.fire({
             icon: 'error',
@@ -191,6 +182,28 @@ function likePost(postData, e) {
             text: err.responseText,
         })
     })
+}
+
+function handleAfterLikePost(elementHeart) {
+    let heartColor = "#ff0076"
+    let grayColor = "#3a3b45"
+    let elementTotalReaction = elementHeart.find("span.total-reaction")
+
+    if (convertRGBToHex(elementHeart.css("color")) == heartColor) {
+        elementHeart.css("color", grayColor)
+        if (elementTotalReaction.html() != "1") {
+            elementTotalReaction.html(Number(elementTotalReaction.html()) - 1)
+        } else {
+            elementTotalReaction.html("")
+        }
+    } else {
+        elementHeart.css("color", heartColor)
+        if (elementTotalReaction.html() != "") {
+            elementTotalReaction.html(Number(elementTotalReaction.html()) + 1)
+        } else {
+            elementTotalReaction.html(1)
+        }
+    }
 }
 
 
@@ -412,6 +425,6 @@ function getListReaction() {
     })
 }
 
-function convertRGBToHex(rgb){
+function convertRGBToHex(rgb) {
     return `#${rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).slice(1).map(n => parseInt(n, 10).toString(16).padStart(2, '0')).join('')}`
 }
