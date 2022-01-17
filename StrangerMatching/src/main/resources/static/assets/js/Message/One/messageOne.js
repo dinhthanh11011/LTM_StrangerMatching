@@ -8,11 +8,11 @@ $(document).ready(() => {
     user_sendTo = getUserInfo($("#user_sendTo").val())
     userVideoWith = user_sendTo
     loadUserSendToInfo()
-    loadMessages(element_chatBlock,currentUser.email,user_sendTo.email)
+    loadMessages(element_chatBlock, currentUser.email, user_sendTo.email)
     connect(currentUser.email)
 
     $("#btn-goto-profile").click(e => {
-        document.location = "/User/Profile/"+user_sendTo.email;
+        document.location = "/User/Profile/" + user_sendTo.email;
     })
 })
 

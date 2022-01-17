@@ -9,7 +9,6 @@ $(document).ready(() => {
     $("#modal-loader").modal("show")
     currentUser = getUserInfo("")
     connect(currentUser.email)
-
     loadTimeToMatching(TimeToMatching)
 
     $("#btn-goto-profile").click(e => {
@@ -34,20 +33,20 @@ function loadTimeToMatching(minute) {
     minute = minute - 1
     let second = 59
     let interval = window.setInterval(() => {
-        if(userRandom.email!=null){
+        if (userRandom.email != null) {
             clearInterval(interval);
         }
         if (second == 0) {
-            if(minute == 0){
+            if (minute == 0) {
                 Swal.fire({
                     title: '<strong>Matching Failure</strong>',
                     icon: 'info',
-                    html:'Không tìm thấy đối tượng nào phù hợp!',
-                    timer:1000
-                }).then(()=>{
+                    html: 'Không tìm thấy đối tượng nào phù hợp!',
+                    timer: 1000
+                }).then(() => {
                     document.location = "/"
                 })
-            }else{
+            } else {
                 minute = minute - 1
                 second = 59
             }

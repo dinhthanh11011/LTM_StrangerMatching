@@ -70,7 +70,8 @@ public class ChattingApi {
         SimpMessageHeaderAccessor userSHA = UserMatchingStorage.getInstance().getUserOnlineByEmail(email);
 
         if (userSHA != null) {
-            UserEntity currentUser = (UserEntity) userSHA.getSessionAttributes().get(WebSocketCommon.USER_ENTITY_KEY_IN_ONLINE_LIST);
+            UserDTO currentUser = UserParser.ToDTO((UserEntity) userSHA.getSessionAttributes().get(WebSocketCommon.USER_ENTITY_KEY_IN_ONLINE_LIST));
+            currentUser.setPeerId(userSHA.getSessionAttributes().get("peerId").toString());
             if (!tryMatching(currentUser)) {
                 if (!UserMatchingStorage.getInstance().getUsersWaitingToChatMatching().contains(userSHA)) {
                     UserMatchingStorage.getInstance().getUsersWaitingToChatMatching().add(userSHA);
@@ -86,7 +87,7 @@ public class ChattingApi {
         simpMessagingTemplate.convertAndSend(WebSocketCommon.TOTAL_WAITING_STRANGER_MATCHING_URL, UserMatchingStorage.getInstance().getUsersWaitingToChatMatching().size());
     }
 
-    private boolean tryMatching(UserEntity currentUser) {
+    private boolean tryMatching(UserDTO currentUser) {
         // sau khi nhận yêu cầu gép đôi thì kiểm tra trong danh sách những người đang chờ gép đôi xem có ai phù hợp không
         // nếu có thì ghép đôi với người đó luôn, nếu không thì thêm user này vào danh sách chờ ghép đôi
         for (SimpMessageHeaderAccessor item : UserMatchingStorage.getInstance().getUsersWaitingToChatMatching()) {
@@ -98,8 +99,11 @@ public class ChattingApi {
                     && currentUser.getAge() >= item_user.getAgePreferenceFrom()
                     && currentUser.getAge() <= item_user.getAgePreferenceTo()
             ) {
-                simpMessagingTemplate.convertAndSend(WebSocketCommon.STRANGER_MATCHING_URL + currentUser.getEmail(), UserParser.ToDTO(item_user));
-                simpMessagingTemplate.convertAndSend(WebSocketCommon.STRANGER_MATCHING_URL + item_user.getEmail(), UserParser.ToDTO(currentUser));
+                UserDTO item_userDTO = UserParser.ToDTO(item_user);
+                item_userDTO.setPeerId(item.getSessionAttributes().get("peerId").toString());
+
+                simpMessagingTemplate.convertAndSend(WebSocketCommon.STRANGER_MATCHING_URL + currentUser.getEmail(), item_userDTO);
+                simpMessagingTemplate.convertAndSend(WebSocketCommon.STRANGER_MATCHING_URL + item_user.getEmail(), currentUser);
                 UserMatchingStorage.getInstance().getUsersWaitingToChatMatching().remove(item);
                 return true;
             }

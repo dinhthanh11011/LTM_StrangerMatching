@@ -10,6 +10,7 @@ $(document).ready(() => {
             contentType: "application/json",
         }).done(res => {
             localStorage.setItem("token", res.token)
+            localStorage.removeItem("announMessages")
             document.location = "/"
         }).fail(err => {
             Swal.fire({

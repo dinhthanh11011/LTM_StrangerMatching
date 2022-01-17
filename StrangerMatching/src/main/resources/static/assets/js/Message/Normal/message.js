@@ -12,10 +12,10 @@ var userSelected = {}
 $(document).ready(() => {
     currentUser = getUserInfo("")
     listAllUsers = getAllUser()
-    console.log(listAllUsers)
     connect(currentUser.email)
     if (listAllUsers.length > 0) {
         userSelected = listAllUsers[0]
+        userVideoWith = userSelected
         loadMessages(element_chatBlock, currentUser.email, userSelected.email)
         loadUserChatWithInfo(userSelected)
     }
@@ -65,6 +65,7 @@ function nonAccentVietnamese(str) {
 
 function selectionUser(userEmail) {
     userSelected = listAllUsers.find(item => item.email == userEmail)
+    userVideoWith = userSelected
     loadMessages(element_chatBlock, currentUser.email, userSelected.email)
     loadUserChatWithInfo(userSelected)
 }

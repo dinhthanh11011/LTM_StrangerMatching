@@ -13,43 +13,34 @@ var userVideoWith = {}
 $(document).ready(() => {
     // bắt sự kiện mở modal
     $("#modal-video-call").on('show.bs.modal', (e) => {
-        if (userVideoWith.isOnline) {
-            OnShowModal()
-        } else {
-            Swal.fire({
-                title: `This user is't online!`,
-                icon: 'info'
-            }).then(()=>{
-                $("#modal-video-call").modal("hide")
-            })
-        }
+        $("#btn-start-video-call").removeClass("d-none")
     })
 
     // bắt sự kiện tắt modal
     $("#modal-video-call").on('hidden.bs.modal', (e) => {
-        OnCloseModal()
+        closeStreamAndEndCall()
     })
 
     // bắt đầu cuộc gọi
     $("#btn-start-video-call").on('click', (e) => {
-        alert("á")
+        if (userVideoWith.isOnline) {
+            makeAVideoCall()
+        } else {
+            Swal.fire({
+                title: `This user is offline!`,
+                icon: 'info'
+            }).then(() => {
+                $("#modal-video-call").modal("hide")
+            })
+        }
     })
-
 })
-
-
-// peer js
-//===========================================================================
-
-
-
-
 
 // video Stream function
 //===========================================================================
 function openStream() {
-    let config = {audio: false, video: true}
-    return navigator.mediaDevices.getUserMedia(config)
+    let constraints = {audio: true, video: true}
+    return navigator.mediaDevices.getUserMedia(constraints)
 }
 
 function playStream(elementVideo, stream) {
@@ -58,39 +49,60 @@ function playStream(elementVideo, stream) {
     video.play()
 }
 
-
-
-function OnShowModal() {
+function makeAVideoCall() {
     openStream().then(stream => {
         localStream = stream
-        makeAVideoCall(userVideoWith.peerId)
+        playStream(elementLocalVideo.substring(1), localStream)
+        let call = peer.call(userVideoWith.peerId, localStream)
+        call.on('stream', stream => {
+            $("#btn-start-video-call").addClass("d-none")
+            remoteStream = stream
+            playStream(elementRemoteVideo.substring(1), remoteStream)
+        })
     })
 }
 
-function makeAVideoCall(peerId){
-    playStream(elementLocalVideo.substring(1), localStream)
-    let call = peer.call(peerId, localStream)
-    call.on('stream',remoteStream => playStream(elementRemoteVideo.substring(1), remoteStream))
-}
 
-peer.on('call',call=>{
-    $("#modal-video-call").modal("show")
-    // openStream().then(stream=>{
-    //     call.answer(stream)
-    //     playStream(elementLocalVideo,stream)
-    //     call.on('stream',remoteStream => playStream(elementRemoteVideo.substring(1), remoteStream))
-    // })
+peer.on('call', call => {
+    if (remoteStream == null) {
+        Swal.fire({
+            title: 'A calling!',
+            html: 'Do you want to accept this call?',
+            showCancelButton: true,
+            confirmButtonText: 'accept',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#modal-video-call").modal("show")
+                $("#btn-start-video-call").addClass("d-none")
+                remoteCalling = call
+                openStream().then(stream => {
+                    call.answer(stream)
+
+                    localStream = stream
+                    playStream(elementLocalVideo.substring(1), localStream)
+
+                    call.on('stream', stream => {
+                        remoteStream = stream
+                        playStream(elementRemoteVideo.substring(1), remoteStream)
+                    })
+                })
+            }
+        })
+    }
 })
 
-function OnCloseModal() {
+
+function closeStreamAndEndCall() {
     if (localStream != null) {
         localStream.getTracks().forEach(function (track) {
             track.stop();
         });
+        localStream = null
     }
     if (remoteStream != null) {
         remoteStream.getTracks().forEach(function (track) {
             track.stop();
         });
+        remoteStream = null
     }
 }

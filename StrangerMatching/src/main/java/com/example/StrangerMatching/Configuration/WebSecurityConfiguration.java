@@ -61,7 +61,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/api/User/Login",
                 "/api/User/Register",
                 "/api/User/Register/Confirm/**",
-                "/api/User/FogotPassword"
+                "/api/User/FogotPassword",
+                "/api/User/resetPassword/**"
         ).permitAll().
                 // all other requests need to be authenticated
                         antMatchers("/api/**").authenticated().and().

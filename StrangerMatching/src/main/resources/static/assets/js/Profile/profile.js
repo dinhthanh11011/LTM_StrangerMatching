@@ -56,7 +56,17 @@ $(document).ready(() => {
         document.location = "/"
     })
 
+    $(document).on("click", ".announ-message-item", e => {
+        e.preventDefault()
+        let tar = $(e.currentTarget)
+        let userEmail = tar.attr("data-email")
 
+        let messages =  JSON.parse(localStorage.getItem("announMessages"))
+        if(messages){
+            localStorage.setItem("announMessages", JSON.stringify(messages.filter(item=>item.sendFrom.email != userEmail)))
+        }
+        document.location = `/Message/${userEmail}`
+    })
 })
 
 function loadUserProfileInfo(userProfile){

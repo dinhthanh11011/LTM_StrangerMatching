@@ -6,24 +6,22 @@ function connect(email) {
 
     stompClient.connect({}, function () {
 
-        // //nhận danh sách các user online
-        // stompClient.subscribe("/topic/Online", function (response) {
-        //     var userOnlines = JSON.parse(response.body)
-        //     listAllUsers.forEach(item => {
-        //         item.isOnline = false
-        //     })
-        //     userOnlines.forEach(item => {
-        //         listAllUsers.find(us => us.email == item.email).isOnline = true
-        //     })
-        //     loadListUser(listAllUsers)
-        //     loadUserChatWithInfo(userSelected)
-        // });
-        //
-        // stompClient.subscribe("/topic/Messages/" + email, function (response) {
-        //     // xử lý tin nhắn nhận được từ websocket
-        //     let message = JSON.parse(response.body)
-        //     receiveMessage(element_chatBlock, message, userSelected)
-        // });
+        stompClient.subscribe("/topic/Messages/" + email, function (response) {
+            // xử lý tin nhắn nhận được từ websocket
+            let data = JSON.parse(response.body)
+            let announMessages = JSON.parse(localStorage.getItem("announMessages"))
+            if (announMessages) {
+                announMessages.unshift(data)
+                localStorage.setItem("announMessages", JSON.stringify(announMessages))
+            }
+
+            Swal.fire({
+                position: 'top-end',
+                html: RenderAnnounMessagesItem(data),
+                showConfirmButton: false,
+                timer: 2000
+            })
+        });
 
         peer.on('open', function (id) {
             peerId = id
@@ -31,16 +29,22 @@ function connect(email) {
             stompClient.send("/app/Register", {}, JSON.stringify({email: email, peerId: peerId}))
         })
 
-        // gửi tin nhắn
-        // stompClient.send("/app/Chat/dinhthanh11011@gmail.com",{},JSON.stringify({text:"hell", sendFrom:{email:"dinhthanh11011@gmail.com"}}))
-
-        // $("#form-send-message").submit(e => {
-        //     e.preventDefault()
-        //     let data = $(e.target).serializeFormJSON()
-        //     data.sendFrom = currentUser
-        //     data.sendTo = userSelected
-        //     sendMessage(data, element_chatBlock)
-        //     $(e.target)[0].reset()
-        // })
     });
+}
+
+function RenderAnnounMessagesItem(item){
+    return `
+        <a class="dropdown-item d-flex align-items-center announ-message-item" data-email="${item.sendFrom.email}">
+            <div class="dropdown-list-image me-3"><img class="rounded-circle" width="50px" height="50px"
+                                                        style="object-fit: cover"
+                                                       src="${item.sendFrom.avatar.path}">
+                <div class="bg-success status-indicator"></div>
+            </div>
+            <div class="fw-bold">
+                <p class="text-dark mb-0" style="text-align: left">${item.sendFrom.name}</p>
+                <div class="small text-gray-500" style="text-align: left"><span>${new Date(item.createdDate).toLocaleString()}</span></div>
+                <div class="small text-gray-700" style="text-align: left"><span>${item.text}</span></div>
+            </div>
+        </a>
+        `
 }

@@ -17,12 +17,12 @@ function connect(email) {
         });
 
         // đăng kí nhận thông báo số người đang chờ ghép đôi
-        stompClient.subscribe("/topic/TotalWaitingMatching" , function (response) {
+        stompClient.subscribe("/topic/TotalWaitingMatching", function (response) {
             console.log(response.body != 0)
-            if(response.body != 0){
+            if (response.body != 0) {
                 $("#txt-total-waiting-matching").removeClass("d-none")
                 $("#txt-total-waiting-matching").html(response.body)
-            }else{
+            } else {
                 $("#txt-total-waiting-matching").addClass("d-none")
             }
 
@@ -32,7 +32,14 @@ function connect(email) {
             // xử lý tin nhắn nhận được từ websocket
             let data = JSON.parse(response.body)
             announMessages.unshift(data)
-            loadListAnnounMessages("#announce-messages-total","#announce-messages-list",announMessages)
+            localStorage.setItem("announMessages", JSON.stringify(announMessages))
+            loadListAnnounMessages("#announce-messages-total", "#announce-messages-list", announMessages)
+            Swal.fire({
+                position: 'top-end',
+                html: RenderAnnounMessagesItem(data),
+                showConfirmButton: false,
+                timer: 2000
+            })
         });
 
         peer.on('open', function (id) {
@@ -43,32 +50,35 @@ function connect(email) {
 
         stompClient.send("/app/TotalStrangerMatching", {}, null)
 
-        // gửi tin nhắn
-        // stompClient.send("/app/Chat/dinhthanh11011@gmail.com",{},JSON.stringify({text:"hell", sendFrom:{email:"dinhthanh11011@gmail.com"}}))
-
     });
 }
 
-function loadListAnnounMessages(elementTotal,elementList, data) {
-    $(elementTotal).html(data.length)
-    $(elementTotal).removeClass("d-none")
-    $(`${elementList} a`).remove()
-    data.forEach(item => {
-        let html = `
-        <a class="dropdown-item d-flex align-items-center" href="/Message/${item.sendFrom.email}">
+function loadListAnnounMessages(elementTotal, elementList, data) {
+    if (data.length > 0) {
+        $(elementTotal).html(data.length)
+        $(elementTotal).removeClass("d-none")
+        $(`${elementList} a`).remove()
+        data.forEach(item => {
+            $(elementList).append(RenderAnnounMessagesItem(item))
+        })
+    }
+}
+
+function RenderAnnounMessagesItem(item){
+    return `
+        <a class="dropdown-item d-flex align-items-center announ-message-item" data-email="${item.sendFrom.email}">
             <div class="dropdown-list-image me-3"><img class="rounded-circle" width="50px" height="50px"
                                                         style="object-fit: cover"
                                                        src="${item.sendFrom.avatar.path}">
                 <div class="bg-success status-indicator"></div>
             </div>
             <div class="fw-bold">
-                <div class="text-truncate"><span>${item.text}</span></div>
-                <p class="small text-gray-500 mb-0">${item.sendFrom.name} - ${new Date(item.createdDate).toLocaleString()}</p>
+                <p class="text-dark mb-0" style="text-align: left">${item.sendFrom.name}</p>
+                <div class="small text-gray-500" style="text-align: left"><span>${new Date(item.createdDate).toLocaleString()}</span></div>
+                <div class="small text-gray-700" style="text-align: left"><span>${item.text}</span></div>
             </div>
         </a>
         `
-        $(elementList).append(html)
-    })
 }
 
 function loadUserOnlineList(elementTotal, elementList, data) {

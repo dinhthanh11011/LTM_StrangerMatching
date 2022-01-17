@@ -1,4 +1,3 @@
-
 var currentUser = {}
 
 // nơi load danh sách bài post
@@ -13,9 +12,14 @@ $(document).ready(() => {
         document.location = "/Login"
     }
 
+    let tmp_message = JSON.parse(localStorage.getItem("announMessages"))
+    if (tmp_message) {
+        loadListAnnounMessages("#announce-messages-total", "#announce-messages-list", tmp_message)
+    }
+
     connect(currentUser.email)
 
-    loadAllListPosts(element_PostBlock,false)
+    loadAllListPosts(element_PostBlock, false)
 
     $("#btn-logout").click(e => {
         e.preventDefault()
@@ -32,6 +36,17 @@ $(document).ready(() => {
         document.location = "/User/Profile/" + currentUser.email
     })
 
+    $(document).on("click", ".announ-message-item", e => {
+        e.preventDefault()
+        let tar = $(e.currentTarget)
+        let userEmail = tar.attr("data-email")
+
+        let messages =  JSON.parse(localStorage.getItem("announMessages"))
+        if(messages){
+            localStorage.setItem("announMessages", JSON.stringify(messages.filter(item=>item.sendFrom.email != userEmail)))
+        }
+        document.location = `/Message/${userEmail}`
+    })
 })
 
 function logout(e) {

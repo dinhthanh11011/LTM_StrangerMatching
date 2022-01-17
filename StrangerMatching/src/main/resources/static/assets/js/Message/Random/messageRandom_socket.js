@@ -19,15 +19,16 @@ function connect(email) {
                     stompClient.send("/app/Matching", {}, email)
                 }
             }
-            if(userRandom.email != null){
-                loadUserOnlineStatus("#user-online-status", userOnlines.find(item => item.email == userRandom.email) != null ? true : false)
+            if (userRandom.email != null) {
+                let user_tmp = userOnlines.find(item => item.email == userRandom.email)
+                userRandom.isOnline = user_tmp != null ? true : false
+                if (userRandom.isOnline) {
+                    userRandom.peerId = user_tmp.peerId
+                }
+                loadUserOnlineStatus("#user-online-status", userRandom.isOnline)
             }
 
-            let user_tmp = userOnlines.find(item => item.email == userRandom.email)
-            userRandom.IsOnline = user_tmp != null ? true : false
-            if (userRandom.IsOnline) {
-                userRandom.peerId = user_tmp.peerId
-            }
+
         });
 
         stompClient.subscribe("/topic/Messages/" + email, function (response) {
@@ -39,6 +40,8 @@ function connect(email) {
         // đăng kí stranger matching
         stompClient.subscribe("/topic/Match/" + email, function (response) {
             userRandom = JSON.parse(response.body)
+            userVideoWith = userRandom
+            userRandom.isOnline = true
             setUserMatchingInfo(userRandom)
             loadMessages(element_chatBlock, currentUser.email, userRandom.email)
             $("#modal-loader").modal("hide")
@@ -61,7 +64,7 @@ function connect(email) {
                 let data = $(e.target).serializeFormJSON()
                 data.sendFrom = currentUser
                 data.sendTo = userRandom
-                sendMessage(stompClient,data, element_chatBlock)
+                sendMessage(stompClient, data, element_chatBlock)
                 $(e.target)[0].reset()
             } else {
                 Swal.fire({
